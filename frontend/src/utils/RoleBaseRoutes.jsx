@@ -2,7 +2,7 @@
 import { useAuth } from "../context/authContext"
 import { Navigate } from "react-router-dom"
 
-const RoleBasedRoutes = ({children, requiredRole}) => {
+const RoleBaseRoutes = ({children, requiredRole}) => {
     const {user, loading} = useAuth()
 
     if(loading) {
@@ -17,4 +17,4 @@ const RoleBasedRoutes = ({children, requiredRole}) => {
     return user ? children : <Navigate to="/login"/>
 }
 
-export default RoleBasedRoutes
+export default RoleBaseRoutes
