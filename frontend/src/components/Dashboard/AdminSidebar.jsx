@@ -13,7 +13,7 @@ const AdminSidebar = () => {
           <Gauge />
           <span>Dashboard</span>
         </NavLink>
-        <NavLink to="/admin-dashboard" className="flex items-center space-x-4 block py-2.5 px-4 rounded">
+        <NavLink to="/admin-dashboard/employees" className={({isActive}) => `${isActive ? "bg-blue-500" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`}>
           <Users />
           <span>Employees</span>
         </NavLink>
@@ -31,6 +31,7 @@ const AdminSidebar = () => {
         </NavLink>
         <NavLink to="/admin-dashboard" className="flex items-center space-x-4 block py-2.5 px-4 rounded">
           <Settings2/>
+
           <span>Settings</span>
         </NavLink>
       </div>
