@@ -8,6 +8,9 @@ import AdminSummary from './components/Dashboard/AdminSummary'
 import DepartmentList from './components/Dashboard/departments/DepartmentList'
 import AddDepartment from './components/Dashboard/departments/AddDepartment'
 import EditDepartment from './components/Dashboard/departments/EditDepartment'
+import EmployeeList from './components/Dashboard/employee/EmployeeList'
+import AddEmployee from './components/Dashboard/employee/AddEmployee'
+import View from './components/Dashboard/employee/View'
 function App() {
   return (
     <BrowserRouter>
@@ -25,6 +28,10 @@ function App() {
           <Route path="/admin-dashboard/departments" element={<DepartmentList />}></Route>
           <Route path="/admin-dashboard/add-department" element={<AddDepartment />}></Route>
           <Route path="/admin-dashboard/department/:id" element={<EditDepartment />}></Route>
+
+          <Route path="/admin-dashboard/employees" element={<EmployeeList />}></Route>
+          <Route path="/admin-dashboard/add-employee" element={<AddEmployee />}></Route>
+          <Route path="/admin-dashboard/employees/:id" element={<View />}></Route>
         </Route>
       <Route path="/employee-dashboard" element={<EmployeeDashboard />}></Route>
     </Routes>
