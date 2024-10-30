@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom"
-// import {FaBuilding, FaTechometerAlt,  FaUsers} from 'react-icons/fa'
 import {Banknote, Building2, CalendarDays, Gauge, Settings2, Users} from 'lucide-react'
 
 const AdminSidebar = () => {
