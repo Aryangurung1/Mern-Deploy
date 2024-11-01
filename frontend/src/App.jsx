@@ -12,6 +12,7 @@ import EmployeeList from "./components/Dashboard/employee/EmployeeList";
 import AddEmployee from "./components/Dashboard/employee/AddEmployee";
 import View from "./components/Dashboard/employee/View";
 import EditEmployee from "./components/Dashboard/employee/EditEmployee";
+import Summary from "./components/Dashboard/EmployeeDashboard/Summary";
 function App() {
   return (
     <BrowserRouter>
@@ -68,7 +69,9 @@ function App() {
               </RoleBaseRoutes>
             </PrivateRoutes>
           }
-        ></Route>
+        >
+          <Route index element={<Summary />}></Route>
+        </Route>
       </Routes>
     </BrowserRouter>
   );
