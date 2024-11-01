@@ -7,7 +7,7 @@ import { columns, EmployeeButtons } from "../../../utils/EmployeeHelper";
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([])
   const [empLoading, setEmpLoading] = useState(false)
-
+  const [filteredEmployee, setFilteredEmployee] = useState([])
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -30,6 +30,7 @@ const EmployeeList = () => {
             action: (<EmployeeButtons Id={emp._id} />),
           }));
           setEmployees(data)
+          setFilteredEmployee(data)
         }
       } catch (error) {
         if (error.response && !error.response.data.success) {
@@ -42,6 +43,13 @@ const EmployeeList = () => {
 
     fetchEmployees();
   }, []);
+
+  const handleFilter = (e) => {
+    const records = employees.filter((emp) => (
+      emp.name.toLowerCase().includes(e.target.value.toLowerCase())
+    ))
+    setFilteredEmployee(records)
+  }
   return (
     <div className="p-6">
       <div className="text-center">
@@ -52,6 +60,7 @@ const EmployeeList = () => {
               type="text"
               placeholder="Search Employee"
               className="px-4 py-0.5"
+              onChange={handleFilter}
             />
             <Link
               to="/admin-dashboard/add-employee"
@@ -60,11 +69,11 @@ const EmployeeList = () => {
               Add New Employee
             </Link>
           </div>
-          <div>
+          <div className="mt-6">
             <DataTable
               title="Employee List"
               columns={columns}
-              data={employees}
+              data={filteredEmployee}
               pagination
               progressPending={empLoading}
               progressComponent={<h2>Loading...</h2>}
