@@ -17,7 +17,7 @@ const AuthContext = ({ children }) => {
             "http://localhost:3000/api/auth/verify",
             {
               headers: {
-                Authorization: `Bearer ${token}`,
+                "Authorization": `Bearer ${token}`,
               },
             }
           );

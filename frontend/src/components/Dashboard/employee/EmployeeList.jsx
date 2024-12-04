@@ -1,4 +1,4 @@
-import axios from "axios";
+ import axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
@@ -31,6 +31,7 @@ const EmployeeList = () => {
           }));
           setEmployees(data)
           setFilteredEmployee(data)
+          console.log("image", data)
         }
       } catch (error) {
         if (error.response && !error.response.data.success) {

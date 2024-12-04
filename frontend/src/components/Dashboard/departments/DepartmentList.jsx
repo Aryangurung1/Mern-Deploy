@@ -75,7 +75,7 @@ const DepartmentList = () => {
               Add New Department
             </Link>
           </div>
-          <div>
+          <div className="pt-5">
             <DataTable columns={columns} data={filteredDepartments} pagination/>
           </div>
         </div>

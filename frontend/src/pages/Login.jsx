@@ -1,21 +1,20 @@
 import { useState } from "react";
 import axios from "axios";
-import toast, {Toaster} from 'react-hot-toast'
+import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
-import {Icon} from 'react-icons-kit';
-import {eyeOff} from 'react-icons-kit/feather/eyeOff';
-import {eye} from 'react-icons-kit/feather/eye'
-
+import { Icon } from "react-icons-kit";
+import { eyeOff } from "react-icons-kit/feather/eyeOff";
+import { eye } from "react-icons-kit/feather/eye";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
-  const {login} = useAuth()
-  const [type, setType] = useState('password');
+  const { login } = useAuth();
+  const [type, setType] = useState("password");
   const [icon, setIcon] = useState(eyeOff);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,37 +23,36 @@ const Login = () => {
         "http://localhost:3000/api/auth/login",
         { email, password }
       );
-      if(response.data.success){
-        login(response.data.user)
-        localStorage.setItem("token", response.data.token)
-        if(response.data.user.role === "admin") {
-            navigate('/admin-dashboard')
-        }else {
-            navigate('/employee-dashboard')
+      if (response.data.success) {
+        login(response.data.user);
+        localStorage.setItem("token", response.data.token);
+        if (response.data.user.role === "admin") {
+          navigate("/admin-dashboard");
+        } else {
+          navigate("/employee-dashboard");
         }
-        toast.success('Login Successful', {
-            position: "top-center"
-        })
+        toast.success("Login Successful", {
+          position: "top-center",
+        });
       }
     } catch (error) {
-      if(error.response && !error.response.data.success){
-        setError(error.response.data.error)
+      if (error.response && !error.response.data.success) {
+        setError(error.response.data.error);
       } else {
-        setError("Server Error")
+        setError("Server Error");
       }
     }
   };
 
-
   const handleToggle = () => {
-    if (type==='password'){
-       setIcon(eye);
-       setType('text')
+    if (type === "password") {
+      setIcon(eye);
+      setType("text");
     } else {
-       setIcon(eyeOff)
-       setType('password')
+      setIcon(eyeOff);
+      setType("password");
     }
- }
+  };
 
   return (
     <>
@@ -65,7 +63,7 @@ const Login = () => {
             alt="Sample image"
           />
         </div>
-        <Toaster/>
+        <Toaster />
         <form
           onSubmit={handleSubmit}
           className="relative md:w-1/3 max-w-sm p-6 border-2 border-blue-600 rounded-lg"
@@ -95,24 +93,26 @@ const Login = () => {
                   <FaEye className="absolute mr-10" icon={icon} size={25}/>
               </span>
           </div> */}
-         <div>
-         <label htmlFor="password">Password</label>
-           <div className="mb-4 flex">
-            
+          <div>
+            <label htmlFor="password">Password</label>
+            <div className="mb-4 flex">
               <input
-               className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-1"
-                  type={type}
-                  name="password"
-                  placeholder="*******"
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-             />
-             <span className="flex justify-around items-center" onClick={handleToggle}>
-                  <Icon class="absolute mr-10" icon={icon} size={25}/>
+                className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-1"
+                type={type}
+                name="password"
+                placeholder="*******"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <span
+                className="flex justify-around items-center"
+                onClick={handleToggle}
+              >
+                <Icon class="absolute mr-10" icon={icon} size={25} />
               </span>
             </div>
-         </div>
-          <div className="mt-4 flex justify-between font-semibold text-sm">
+          </div>
+          {/* <div className="mt-4 flex justify-between font-semibold text-sm">
             <label className="flex text-slate-500 hover:text-slate-600 cursor-pointer">
               <input className="mr-1" type="checkbox" />
               <span>Remember Me</span>
@@ -123,7 +123,7 @@ const Login = () => {
             >
               Forgot Password?
             </a>
-          </div>
+          </div> */}
           <div className="text-center ">
             <button
               className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white uppercase rounded text-xs"
@@ -136,6 +136,6 @@ const Login = () => {
       </div>
     </>
   );
-}
+};
 
 export default Login;
