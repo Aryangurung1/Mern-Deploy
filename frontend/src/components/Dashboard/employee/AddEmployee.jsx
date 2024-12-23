@@ -34,7 +34,12 @@ const AddEmployee = () => {
             formDataObj.append(key, formData[key])
         })
         try {
-            const response = await axios.post('http://localhost:3000/api/employee/add', formDataObj, {
+          const baseURL = import.meta.env.VITE_EMPORA_LINK;
+      if (!baseURL) {
+        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
+        return;
+      }
+            const response = await axios.post(`${baseURL}/api/employee/add`, formDataObj, {
                 headers: {
                     "Authorization" : `Bearer ${localStorage.getItem('token')}`
                 }
@@ -217,6 +222,8 @@ const AddEmployee = () => {
               <option value="">Select Role </option>
               <option value="admin">Admin </option>
               <option value="employee">Employee </option>
+              <option value="hr">Hr</option>
+              <option value="accountant">Accountant</option>
             </select>
           </div>
           {/* Image Upload */}

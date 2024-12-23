@@ -1,19 +1,28 @@
-import axios from "axios";
+ import axios from "axios";
 import { useState, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import { columns, EmployeeButtons } from "../../../utils/EmployeeHelper";
+import { useAuth } from "../../../context/authContext";
+import { useNavigate } from "react-router-dom";
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([])
   const [empLoading, setEmpLoading] = useState(false)
   const [filteredEmployee, setFilteredEmployee] = useState([])
+  const navigate = useNavigate();
+  const {user} = useAuth()
 
   useEffect(() => {
     const fetchEmployees = async () => {
       setEmpLoading(true);
       try {
-        const response = await axios.get('http://localhost:3000/api/employee', {
+        const baseURL = import.meta.env.VITE_EMPORA_LINK;
+      if (!baseURL) {
+        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
+        return;
+      }
+        const response = await axios.get(`${baseURL}/api/employee`, {
             headers: {
               "Authorization" : `Bearer ${localStorage.getItem("token")}`,
             }
@@ -31,6 +40,7 @@ const EmployeeList = () => {
           }));
           setEmployees(data)
           setFilteredEmployee(data)
+          console.log("image", data)
         }
       } catch (error) {
         if (error.response && !error.response.data.success) {
@@ -49,6 +59,11 @@ const EmployeeList = () => {
       emp.name.toLowerCase().includes(e.target.value.toLowerCase())
     ))
     setFilteredEmployee(records)
+  }
+
+  if(user.role === "accountant"){
+    navigate("/admin-dashboard");
+    return
   }
   return (
     <div className="p-6">

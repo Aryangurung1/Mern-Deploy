@@ -26,8 +26,13 @@ const EditEmployee = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
+        const baseURL = import.meta.env.VITE_EMPORA_LINK;
+      if (!baseURL) {
+        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
+        return;
+      }
         const response = await axios.get(
-          `http://localhost:3000/api/employee/${id}`,
+          `${baseURL}/api/employee/${id}`,
           {
             headers: {
               "Authorization": `Bearer ${localStorage.getItem("token")}`,

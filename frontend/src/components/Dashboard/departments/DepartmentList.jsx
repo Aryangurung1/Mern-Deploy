@@ -18,7 +18,12 @@ const DepartmentList = () => {
     const fetchDepartments = async () => {
       setDepLoading(true);
       try {
-        const response = await axios.get('http://localhost:3000/api/department', {
+        const baseURL = import.meta.env.VITE_EMPORA_LINK;
+      if (!baseURL) {
+        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
+        return;
+      }
+        const response = await axios.get(`${baseURL}/api/department`, {
             headers: {
               "Authorization" : `Bearer ${localStorage.getItem("token")}`,
             }
@@ -75,7 +80,7 @@ const DepartmentList = () => {
               Add New Department
             </Link>
           </div>
-          <div>
+          <div className="pt-5">
             <DataTable columns={columns} data={filteredDepartments} pagination/>
           </div>
         </div>
