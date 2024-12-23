@@ -1,12 +1,13 @@
-import { Link } from "react-router-dom";
-import { useAuth } from "../../../context/authContext";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { useAuth } from "../../../context/authContext";
 
 const List = () => {
-  const { user } = useAuth();
-  const [leaves, setLeaves] = useState([]);
+  const [leaves, setLeaves] = useState(null);
   let sno = 1;
+  const { id } = useParams();
+  const {user} = useAuth()
 
   const fetchLeaves = async () => {
     try {
@@ -16,7 +17,7 @@ const List = () => {
         return;
       }
       const response = await axios.get(
-        `${baseURL}/api/leave/${user._id}`,
+        `${baseURL}/api/leave/${id}/${user.role}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -36,23 +37,21 @@ const List = () => {
   useEffect(() => {
     fetchLeaves();
   }, []);
+
+  if(!leaves) return <div>Loading...</div>
   return (
     <div className="p-6">
       <div className="text-center">
         <h3 className="text-2xl font-bold">Leave History</h3>
       </div>
       <div className="flex justify-between items-center pb-3">
-        <input
-          type="text"
-          placeholder="Search By Dep Name"
-          className="px-4 py-0.5 border"
-        />
+        {user.role === "employee" && (
         <Link
           to="/employee-dashboard/add-leave"
           className="px-4 py-1 bg-blue-500 rounded text-white"
         >
           Add New Leave
-        </Link>
+        </Link>)}
       </div>
 
       <table className="w-full text-sm text-left text-gray-500 ">

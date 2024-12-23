@@ -19,14 +19,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const baseURL = import.meta.env.VITE_EMPORA_LINK;
+      if (!baseURL) {
+        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
+        return;
+      }
       const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        `${baseURL}/api/auth/login`,
         { email, password }
       );
       if (response.data.success) {
         login(response.data.user);
         localStorage.setItem("token", response.data.token);
-        if (response.data.user.role === "admin") {
+        if (response.data.user.role === "admin" || response.data.user.role === "hr"  || response.data.user.role === "accountant") {
           navigate("/admin-dashboard");
         } else {
           navigate("/employee-dashboard");
@@ -80,19 +85,6 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          {/* <div className="mt-4">
-            <label htmlFor="password">Password</label>
-            <input
-              className="text-sm w-full px-4 py-2 border border-solid border-gray-300 rounded mt-1"
-              type="password"
-              placeholder="*********"
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <span className="flex justify-around items-center" onClick={handleToggle}>
-                  <FaEye className="absolute mr-10" icon={icon} size={25}/>
-              </span>
-          </div> */}
           <div>
             <label htmlFor="password">Password</label>
             <div className="mb-4 flex">
@@ -112,18 +104,6 @@ const Login = () => {
               </span>
             </div>
           </div>
-          {/* <div className="mt-4 flex justify-between font-semibold text-sm">
-            <label className="flex text-slate-500 hover:text-slate-600 cursor-pointer">
-              <input className="mr-1" type="checkbox" />
-              <span>Remember Me</span>
-            </label>
-            <a
-              className="text-blue-600 hover:text-blue-700 hover:underline hover:underline-offset-4"
-              href="#"
-            >
-              Forgot Password?
-            </a>
-          </div> */}
           <div className="text-center ">
             <button
               className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 text-white uppercase rounded text-xs"

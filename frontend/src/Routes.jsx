@@ -21,6 +21,7 @@ import SettingList from "./components/Dashboard/Setting/SettingList";
 import List from "./components/Dashboard/leaves/List";
 import AddLeave from "./components/Dashboard/leaves/Add";
 import AttendanceList from "./components/Dashboard/wfh/AttendanceList";
+import LeaveDetail from "./components/Dashboard/leaves/LeaveDetail";
 
 
 export default function AppRoutes() {
@@ -33,7 +34,7 @@ export default function AppRoutes() {
           path="/admin-dashboard"
           element={
             <PrivateRoutes>
-              <RoleBaseRoutes requiredRole={"admin"}>
+              <RoleBaseRoutes requiredRole={["admin", "hr", "accountant"]}>
                 <AdminDashboard />
               </RoleBaseRoutes>
             </PrivateRoutes>
@@ -47,6 +48,14 @@ export default function AppRoutes() {
           <Route 
           path="/admin-dashboard/leaves"
           element={<LeaveList />}
+        ></Route>
+        <Route 
+          path="/admin-dashboard/leaves/:id"
+          element={<LeaveDetail />}
+        ></Route>
+        <Route 
+          path="/admin-dashboard/employees/leaves/:id"
+          element={<List />}
         ></Route>
         <Route
           path="/admin-dashboard/wfh"
@@ -93,7 +102,7 @@ export default function AppRoutes() {
           path="/employee-dashboard"
           element={
             <PrivateRoutes>
-              <RoleBaseRoutes requiredRole={["admin", "employee"]}>
+              <RoleBaseRoutes requiredRole={["employee"]}>
                 <EmployeeDashboard />
               </RoleBaseRoutes>
             </PrivateRoutes>
@@ -105,7 +114,7 @@ export default function AppRoutes() {
             element={<View />}
           ></Route>
           <Route
-            path="/employee-dashboard/leaves"
+            path="/employee-dashboard/leaves/:id"
             element={<List />}
           ></Route>
           <Route

@@ -48,7 +48,7 @@ export const LeaveButtons = ({ Id }) => {
     const navigate = useNavigate();
 
     const handleView = () => {
-        navigate(`/admin-dashboard/leave/${Id}`)
+        navigate(`/admin-dashboard/leaves/${Id}`)
     }
 
     return(

@@ -18,7 +18,12 @@ const Add = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`http://localhost:3000/api/leave/add`,leave, {
+      const baseURL = import.meta.env.VITE_EMPORA_LINK;
+      if (!baseURL) {
+        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
+        return;
+      }
+      const response = await axios.post(`${baseURL}/api/leave/add`,leave, {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
