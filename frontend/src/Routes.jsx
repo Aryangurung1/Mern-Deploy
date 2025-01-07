@@ -122,6 +122,10 @@ export default function AppRoutes() {
             element={<AddLeave />}
           ></Route>
           <Route
+            path="/employee-dashboard/wfh"
+            element={<WfhList />}
+          ></Route>
+          <Route
             path="/employee-dashboard/attendance"
             element={<AttendanceList />}
           ></Route>

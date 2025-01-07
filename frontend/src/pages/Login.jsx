@@ -1,12 +1,10 @@
 import { useState } from "react";
-import axios from "axios";
-import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "react-icons-kit";
 import { eyeOff } from "react-icons-kit/feather/eyeOff";
 import { eye } from "react-icons-kit/feather/eye";
-
+import axios from "axios";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,36 +14,23 @@ const Login = () => {
   const [icon, setIcon] = useState(eyeOff);
   const navigate = useNavigate();
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const baseURL = import.meta.env.VITE_EMPORA_LINK;
-      if (!baseURL) {
-        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
-        return;
-      }
-      const response = await axios.post(
-        `${baseURL}/api/auth/login`,
-        { email, password }
-      );
+      const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
       if (response.data.success) {
         login(response.data.user);
         localStorage.setItem("token", response.data.token);
-        if (response.data.user.role === "admin" || response.data.user.role === "hr"  || response.data.user.role === "accountant") {
+        console.log("role", response.data.user.role);
+        if (response.data.user.role === "admin" || response.data.user.role === "hr" || response.data.user.role === "accountant") {
           navigate("/admin-dashboard");
         } else {
           navigate("/employee-dashboard");
         }
-        toast.success("Login Successful", {
-          position: "top-center",
-        });
       }
     } catch (error) {
-      if (error.response && !error.response.data.success) {
-        setError(error.response.data.error);
-      } else {
-        setError("Server Error");
-      }
+      setError(error.response?.data?.error || "Server Error");
     }
   };
 
@@ -68,7 +53,6 @@ const Login = () => {
             alt="Sample image"
           />
         </div>
-        <Toaster />
         <form
           onSubmit={handleSubmit}
           className="relative md:w-1/3 max-w-sm p-6 border-2 border-blue-600 rounded-lg"

@@ -62,7 +62,7 @@ const getLeaveDetail = async (req, res) => {
       path: "employeeId",
       populate: [
         { path: "department", select: "dep_name" },
-        { path: "userId", select: "name, profileImage" },
+        { path: "userId", select: "name profileImage" },
       ],
     });
     return res.status(200).json({ success: true, leave });

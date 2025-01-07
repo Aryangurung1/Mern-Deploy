@@ -15,7 +15,7 @@ const LeaveList = () => {
         return;
       }
 
-      const response = await axios.get(`${baseURL}/api/leave`, {
+      const response = await axios.get(`http://localhost:3000/api/leave`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -51,6 +51,8 @@ const LeaveList = () => {
   useEffect(() => {
     fetchLeaves();
   }, []);
+
+  console.log(filteredLeaves);
 
   const filterByInput = (e) => {
     const data = leaves.filter((leave) =>
