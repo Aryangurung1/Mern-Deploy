@@ -2,8 +2,7 @@ import { NavLink } from "react-router-dom";
 import {Banknote, Building2, CalendarDays, Gauge, HousePlug, Settings2, Users} from 'lucide-react'
 import { useAuth } from "../../context/authContext";
 const AdminSidebar = () => {
-  const { user, loading } = useAuth();
-  if(loading) return <div>Loading...</div>
+  const { user } = useAuth();
   return (
     <div className="bg-gray-200 text-black h-screen fixed left-0 top-0 bottom-0 space-y-2 w-64">
       <div className="bg-blue-300 h-12 flex items-center justify-center">
@@ -16,7 +15,7 @@ const AdminSidebar = () => {
         </NavLink>
         
         {
-          (user.role !== "accountant") && (
+          (!user.roles.includes("accountant")) && (
             <>
              <NavLink to="/admin-dashboard/employees" className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`}>
           <Users />
@@ -43,7 +42,7 @@ const AdminSidebar = () => {
           <span>Leave</span>
         </NavLink>
 
-        {(user.role !== "hr") && (
+        {(!user.roles.includes("hr")) && (
           <NavLink to="/admin-dashboard/salary" className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`}>
           <Banknote/>
           <span>Salary</span>

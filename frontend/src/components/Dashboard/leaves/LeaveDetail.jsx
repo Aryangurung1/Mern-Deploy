@@ -110,19 +110,27 @@ const LeaveDetail = () => {
               </div>
               <div className="flex">
                 <p className="text-lg font-bold w-40">
-                  {leave.status === "Pending" ? "Action" : "Status:"}:
+                  {leave.status === "Pending" ? "Action" : "Status"}:
                 </p>
                 {leave.status === "Pending" ? (
                   <div className="flex space-x-2">
                     <button
                       className="px-2 py-0.5 bg-green-400 hover:bg-green-600"
-                      onClick={() => changeStatus(leave._id, "Approved")}
+                      onClick={() => {
+                        if (window.confirm("Are you sure you want to approve this leave?")) {
+                          changeStatus(leave._id, "Approved");
+                        }
+                      }}
                     >
                       Approve
                     </button>
                     <button
                       className="px-2 py-0.5 bg-red-400 hover:bg-red-600"
-                      onClick={() => changeStatus(leave._id, "Rejected")}
+                      onClick={() => {
+                        if (window.confirm("Are you sure you want to reject this leave?")) {
+                          changeStatus(leave._id, "Rejected");
+                        }
+                      }}
                     >
                       Reject
                     </button>

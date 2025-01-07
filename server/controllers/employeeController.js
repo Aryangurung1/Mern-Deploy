@@ -28,9 +28,10 @@ const addEmployee = async (req, res) => {
       department,
       salary,
       password,
-      role,
+      role, // Can be HR, Admin, etc.
     } = req.body;
 
+    // Check if the user already exists
     const user = await User.findOne({ email });
     if (user) {
       return res
@@ -38,19 +39,28 @@ const addEmployee = async (req, res) => {
         .json({ success: false, error: "User already exists" });
     }
 
+    // Hash the password
     const hashPassword = await bcrypt.hash(password, 10);
 
+    // Ensure "roles" includes "employee" and selected roles
+    const roles = Array.isArray(role) ? role : [role]; // Ensure roles is an array
+    if (!roles.includes("employee")) {
+      roles.push("employee"); // Add "employee" role if not present
+    }
 
+    // Create the User
     const newUser = new User({
       name,
       email,
       password: hashPassword,
-      role,
+      roles,
       profileImage: req.file ? req.file.filename : "",
     });
 
+    // Save the User
     const savedUser = await newUser.save();
 
+    // Create the Employee
     const newEmployee = new Employee({
       userId: savedUser._id,
       employeeId,
@@ -62,14 +72,17 @@ const addEmployee = async (req, res) => {
       salary,
     });
 
+    // Save the Employee
     await newEmployee.save();
-    return res.status(200).json({ success: true, message: "employee created" });
+
+    return res.status(200).json({ success: true, message: "Employee created" });
   } catch (error) {
     return res
       .status(500)
-      .json({ success: false, message: "server error in adding employee" });
+      .json({ success: false, message: "Server error in adding employee" });
   }
 };
+
 
 const getEmployees = async (req, res) => {
   try {

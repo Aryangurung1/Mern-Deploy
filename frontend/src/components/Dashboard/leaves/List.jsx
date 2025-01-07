@@ -45,7 +45,7 @@ const List = () => {
         <h3 className="text-2xl font-bold">Leave History</h3>
       </div>
       <div className="flex justify-between items-center pb-3">
-        {user.role === "employee" && (
+        {user.roles.includes("employee") && (
         <Link
           to="/employee-dashboard/add-leave"
           className="px-4 py-1 bg-blue-500 rounded text-white"

@@ -18,41 +18,55 @@ const AddEmployee = () => {
     }, [])
 
     const handleChange = (e) => {
-        const {name, value, files} = e.target
-        if(name === "image"){
-            setFormData((prevData) => ({...prevData, [name] : files[0]}))
-        } else {
-            setFormData((prevData) => ({...prevData, [name] : value}))
-        }
-    }
+      const { name, value, files } = e.target;
+    
+      if (name === "image") {
+        setFormData((prevData) => ({ ...prevData, [name]: files[0] }));
+      } else if (name === "role") {
+        // Multi-select logic for roles
+        const selectedOptions = Array.from(e.target.selectedOptions).map(
+          (option) => option.value
+        );
+        setFormData((prevData) => ({ ...prevData, [name]: selectedOptions }));
+      } else {
+        setFormData((prevData) => ({ ...prevData, [name]: value }));
+      }
+    };
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-
-        const formDataObj = new FormData()
-        Object.keys(formData).forEach(key => {
-            formDataObj.append(key, formData[key])
-        })
-        try {
-          const baseURL = import.meta.env.VITE_EMPORA_LINK;
-      if (!baseURL) {
-        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
-        return;
+      e.preventDefault();
+    
+      // Ensure at least one role is selected
+      if (!formData.role || formData.role.length === 0) {
+        formData.role = ["employee"]; // Default to employee role
       }
-            const response = await axios.post(`${baseURL}/api/employee/add`, formDataObj, {
-                headers: {
-                    "Authorization" : `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            if(response.data.success){
-                navigate("/admin-dashboard/employees")
-            }
-        } catch(error) {
-            if(error.response && !error.response.data.success){
-                alert(error.response.data.error)
-            }
+    
+      const formDataObj = new FormData();
+      Object.keys(formData).forEach((key) => {
+        formDataObj.append(key, formData[key]);
+      });
+    
+      try {
+        const baseURL = import.meta.env.VITE_EMPORA_LINK;
+        if (!baseURL) {
+          console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
+          return;
         }
-    }
+        const response = await axios.post(`${baseURL}/api/employee/add`, formDataObj, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        if (response.data.success) {
+          navigate("/admin-dashboard/employees");
+        }
+      } catch (error) {
+        if (error.response && !error.response.data.success) {
+          alert(error.response.data.error);
+        }
+      }
+    };
+    
   return (
     <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md">
       <h2 className="text-2xl font-bold mb-6">Add New Employee</h2>
@@ -211,17 +225,16 @@ const AddEmployee = () => {
           {/* Role */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Role
+              Specific Role
             </label>
             <select
               name="role"
               onChange={handleChange}
               className="mt-1 p-2 block w-full border order-gray-300 rounded-md"
-              required
+              
             >
               <option value="">Select Role </option>
               <option value="admin">Admin </option>
-              <option value="employee">Employee </option>
               <option value="hr">Hr</option>
               <option value="accountant">Accountant</option>
             </select>
@@ -238,7 +251,7 @@ const AddEmployee = () => {
               placeholder="Upload Image"
               accept="image/"
               className="mt-1 p-2 block w-full border border-gray-300 rounded-md"
-              required
+          
             />
           </div>
         </div>
