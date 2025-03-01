@@ -17,7 +17,7 @@ import LeaveList from "./components/Dashboard/leaves/LeaveList";
 import WfhList from "./components/Dashboard/wfh/WfhList";
 import EventList from "./components/Dashboard/Events/EventList";
 import SalaryList from "./components/Dashboard/Salary/SalaryList";
-import SettingList from "./components/Dashboard/Setting/SettingList";
+import Setting from "./components/Dashboard/Setting/SettingList";
 import List from "./components/Dashboard/leaves/List";
 import AddLeave from "./components/Dashboard/leaves/Add";
 import AttendanceList from "./components/Dashboard/wfh/AttendanceList";
@@ -71,7 +71,7 @@ export default function AppRoutes() {
         ></Route>
         <Route
           path="/admin-dashboard/settings"
-          element={<SettingList />}
+          element={<Setting />}
         ></Route>
           <Route
             path="/admin-dashboard/add-department"
@@ -135,7 +135,7 @@ export default function AppRoutes() {
           ></Route>
           <Route
             path="/employee-dashboard/setting"
-            element={<SettingList />}
+            element={<Setting />}
             />
         </Route>
       </Routes>

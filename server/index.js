@@ -4,6 +4,8 @@ import authRouter from './routes/auth.js'
 import departmentRouter from './routes/department.js'
 import employeeRouter from './routes/employee.js'
 import leaveRouter from './routes/leave.js'
+import settingRouter from './routes/setting.js'
+import dashboardRouter from './routes/dashboard.js'
 import connectToDatabase from './db/db.js'
 
 connectToDatabase()
@@ -15,8 +17,9 @@ app.use('/api/auth', authRouter)
 app.use('/api/department', departmentRouter)
 app.use('/api/employee', employeeRouter)
 app.use('/api/leave', leaveRouter)
+app.use('/api/setting', settingRouter)
+app.use('/api/dashboard', dashboardRouter)
 
-
-app.listen(3000, () => {
+app.listen(process.env.PORT, () => {
     console.log(`Server is running on port 3000`)
 })
