@@ -25,6 +25,17 @@ const AdminSidebar = () => {
           <Building2 />
           <span>Departments</span>
         </NavLink>
+        <NavLink
+          to="/admin-dashboard/attendance"
+          className={({ isActive }) =>
+            `${
+              isActive ? "bg-blue-300" : " "
+            } flex items-center space-x-4 block py-2.5 px-4 rounded`
+          }
+        >
+          <CalendarDays />
+          <span>Attendance</span>
+        </NavLink>
             <NavLink to="/admin-dashboard/wfh" className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`}>
           <HousePlug/>
           <span>WFH</span>
