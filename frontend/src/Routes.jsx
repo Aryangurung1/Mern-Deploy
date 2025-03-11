@@ -23,7 +23,7 @@ import AddLeave from "./components/Dashboard/leaves/Add";
 import Attendance from "./components/Dashboard/attendance/Attendance";
 import EmployeeAttendance from "./components/Dashboard/employeeAttendace/employeeAttendance";
 import LeaveDetail from "./components/Dashboard/leaves/LeaveDetail";
-
+import NoticeList from "./components/notice/Notice";
 
 export default function AppRoutes() {
   return (
@@ -70,6 +70,8 @@ export default function AppRoutes() {
           path="/admin-dashboard/events"
           element={<EventList />}
         ></Route>
+        <Route path="/admin-dashboard/notice" element={<NoticeList />} />
+
         <Route
           path="/admin-dashboard/salary"
           element={<SalaryList />}

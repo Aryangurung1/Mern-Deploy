@@ -44,7 +44,7 @@ const Sidebar = () => {
         </NavLink>
         <NavLink to="/employee-dashboard/setting" className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`} end>
         <Settings />
-        <span>Settings</span>
+        <span>Change Password</span>
         </NavLink>
       </div>
     </div>

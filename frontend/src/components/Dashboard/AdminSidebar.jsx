@@ -36,6 +36,17 @@ const AdminSidebar = () => {
           <CalendarDays />
           <span>Attendance</span>
         </NavLink>
+        <NavLink
+          to="/admin-dashboard/notice"
+          className={({ isActive }) =>
+            `${
+              isActive ? "bg-blue-300" : " "
+            } flex items-center space-x-4 block py-2.5 px-4 rounded`
+          }
+        >
+          <CalendarDays />
+          <span>Notices</span>
+        </NavLink>
             <NavLink to="/admin-dashboard/wfh" className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`}>
           <HousePlug/>
           <span>WFH</span>
@@ -62,7 +73,7 @@ const AdminSidebar = () => {
       
         <NavLink to="/admin-dashboard/settings" className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`}>
           <Settings2/>
-          <span>Settings</span>
+          <span>Change Password</span>
         </NavLink>
       </div>
     </div>
