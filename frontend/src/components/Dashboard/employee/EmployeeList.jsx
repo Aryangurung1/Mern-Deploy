@@ -13,47 +13,49 @@ const EmployeeList = () => {
   const navigate = useNavigate();
   const {user} = useAuth()
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      setEmpLoading(true);
-      try {
-        const baseURL = import.meta.env.VITE_EMPORA_LINK;
-      if (!baseURL) {
-        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
-        return;
+  const fetchEmployees = async () => {
+    setEmpLoading(true);
+    try {
+      const baseURL = import.meta.env.VITE_EMPORA_LINK;
+    if (!baseURL) {
+      console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
+      return;
+    }
+      const response = await axios.get(`${baseURL}/api/employee`, {
+          headers: {
+            "Authorization" : `Bearer ${localStorage.getItem("token")}`,
+          }
+        })
+      if (response.data.success) {
+        let sno = 1;
+        const data = await response.data.employees.map((emp) => ({
+          _id: emp._id,
+          sno: sno++,
+          dep_name: emp.department.dep_name,
+          name: emp.userId.name,
+          role: emp.userId.role,
+          dob: new Date(emp.dob).toLocaleDateString(),
+          profileImage: <img width={40} className="rounded-full" src={`http://localhost:3000/${emp.userId.profileImage}`} />,
+          action: (<EmployeeButtons Id={emp._id} />),
+        }));
+        console.log(data)
+        setEmployees(data)
+        setFilteredEmployee(data)
+        // console.log("image", data)
       }
-        const response = await axios.get(`${baseURL}/api/employee`, {
-            headers: {
-              "Authorization" : `Bearer ${localStorage.getItem("token")}`,
-            }
-          })
-        if (response.data.success) {
-          let sno = 1;
-          const data = await response.data.employees.map((emp) => ({
-            _id: emp._id,
-            sno: sno++,
-            dep_name: emp.department.dep_name,
-            name: emp.userId.name,
-            role: emp.userId.role,
-            dob: new Date(emp.dob).toLocaleDateString(),
-            profileImage: <img width={40} className="rounded-full" src={`http://localhost:3000/${emp.userId.profileImage}`} />,
-            action: (<EmployeeButtons Id={emp._id} />),
-          }));
-          setEmployees(data)
-          setFilteredEmployee(data)
-          console.log("image", data)
-        }
-      } catch (error) {
-        if (error.response && !error.response.data.success) {
-          alert(error.response.data.error);
-        }
-      } finally {
-        setEmpLoading(false);
+    } catch (error) {
+      if (error.response && !error.response.data.success) {
+        alert(error.response.data.error);
       }
-    };
+    } finally {
+      setEmpLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchEmployees();
   }, []);
+  // console.log(employees)
 
   const handleFilter = (e) => {
     const records = employees.filter((emp) => (

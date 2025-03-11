@@ -9,47 +9,48 @@ const DepartmentList = () => {
   const [depLoading, setDepLoading] = useState(false)
   const [filteredDepartments, setFilteredDepartment] = useState([])
 
-  const onDepartmentDelete =async (id) => {
-    const data = departments.filter(dep => dep._id !== id)
-    setDepartments(data)
+  const onDepartmentDelete = () => {
+    fetchDepartments()
   }
 
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      setDepLoading(true);
-      try {
-        const baseURL = import.meta.env.VITE_EMPORA_LINK;
-      if (!baseURL) {
-        console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
-        return;
+  const fetchDepartments = async () => {
+    setDepLoading(true);
+    try {
+      const baseURL = import.meta.env.VITE_EMPORA_LINK;
+    if (!baseURL) {
+      console.error("Environment variable REACT_APP_EMPORA_LINK is not set.");
+      return;
+    }
+      const response = await axios.get(`${baseURL}/api/department`, {
+          headers: {
+            "Authorization" : `Bearer ${localStorage.getItem("token")}`,
+          }
+        })
+      if (response.data.success) {
+        let sno = 1;
+        const data = await response.data.departments.map((dep) => ({
+          _id: dep._id,
+          sno: sno++,
+          dep_name: dep.dep_name,
+          action: <DepartmentButtons Id={dep._id} onDepartmentDelete={onDepartmentDelete}/>,
+        }));
+        console.log(data)
+        setDepartments(data)
+        setFilteredDepartment(data)
       }
-        const response = await axios.get(`${baseURL}/api/department`, {
-            headers: {
-              "Authorization" : `Bearer ${localStorage.getItem("token")}`,
-            }
-          })
-        if (response.data.success) {
-          let sno = 1;
-          const data = await response.data.departments.map((dep) => ({
-            _id: dep._id,
-            sno: sno++,
-            dep_name: dep.dep_name,
-            action: <DepartmentButtons Id={dep._id} onDepartmentDelete={onDepartmentDelete}/>,
-          }));
-          setDepartments(data)
-          setFilteredDepartment(data)
-        }
-      } catch (error) {
-        if (error.response && !error.response.data.success) {
-          alert(error.response.data.error);
-        }
-      } finally {
-        setDepLoading(false);
+    } catch (error) {
+      if (error.response && !error.response.data.success) {
+        alert(error.response.data.error);
       }
-    };
+    } finally {
+      setDepLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchDepartments();
   }, []);
+
 
   const filterDepartments = (e) => {
     const records = departments.filter((dep) => 

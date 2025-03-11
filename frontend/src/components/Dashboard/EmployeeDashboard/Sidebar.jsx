@@ -18,9 +18,17 @@ const Sidebar = () => {
         <User />
         <span>My profile</span>
         </NavLink>
-        <NavLink to="/employee-dashboard/attendance" className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`} end>
-        <ClipboardCheck />
-        <span>Attendance</span>
+        <NavLink
+          to={`/employee-dashboard/attendance/${user._id}`}
+          className={({ isActive }) =>
+            `${
+              isActive ? "bg-blue-300" : " "
+            } flex items-center space-x-4 block py-2.5 px-4 rounded`
+          }
+          end
+        >
+          <ClipboardCheck />
+          <span>Attendance</span>
         </NavLink>
         <NavLink to={`/employee-dashboard/leaves/${user._id}`} className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`} end>
         <Gauge />
@@ -36,7 +44,7 @@ const Sidebar = () => {
         </NavLink>
         <NavLink to="/employee-dashboard/setting" className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`} end>
         <Settings />
-        <span>Settings</span>
+        <span>Change Password</span>
         </NavLink>
       </div>
     </div>

@@ -9,8 +9,8 @@ export const columns = [
     {
         name: "Department Name",
         selector: (row) => row.dep_name,
-        // sortable: true
     },
+   
     {
         name: "Action",
         selector: (row) => row.action
@@ -31,7 +31,7 @@ export const DepartmentButtons = ({Id, onDepartmentDelete}) => {
                 }
               })
             if (response.data.success) {
-                onDepartmentDelete(id)
+                onDepartmentDelete()
             }
           } catch (error) {
             if (error.response && !error.response.data.success) {

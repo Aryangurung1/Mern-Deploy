@@ -17,12 +17,13 @@ import LeaveList from "./components/Dashboard/leaves/LeaveList";
 import WfhList from "./components/Dashboard/wfh/WfhList";
 import EventList from "./components/Dashboard/Events/EventList";
 import SalaryList from "./components/Dashboard/Salary/SalaryList";
-import SettingList from "./components/Dashboard/Setting/SettingList";
+import Setting from "./components/Dashboard/Setting/SettingList";
 import List from "./components/Dashboard/leaves/List";
 import AddLeave from "./components/Dashboard/leaves/Add";
-import AttendanceList from "./components/Dashboard/wfh/AttendanceList";
+import Attendance from "./components/Dashboard/attendance/Attendance";
+import EmployeeAttendance from "./components/Dashboard/employeeAttendace/employeeAttendance";
 import LeaveDetail from "./components/Dashboard/leaves/LeaveDetail";
-
+import NoticeList from "./components/notice/Notice";
 
 export default function AppRoutes() {
   return (
@@ -62,16 +63,22 @@ export default function AppRoutes() {
           element={<WfhList />}
         ></Route>
         <Route
+            path="/admin-dashboard/attendance"
+            element={<Attendance />}
+          ></Route>
+        <Route
           path="/admin-dashboard/events"
           element={<EventList />}
         ></Route>
+        <Route path="/admin-dashboard/notice" element={<NoticeList />} />
+
         <Route
           path="/admin-dashboard/salary"
           element={<SalaryList />}
         ></Route>
         <Route
           path="/admin-dashboard/settings"
-          element={<SettingList />}
+          element={<Setting />}
         ></Route>
           <Route
             path="/admin-dashboard/add-department"
@@ -125,9 +132,9 @@ export default function AppRoutes() {
             path="/employee-dashboard/wfh"
             element={<WfhList />}
           ></Route>
-          <Route
-            path="/employee-dashboard/attendance"
-            element={<AttendanceList />}
+         <Route
+            path="/employee-dashboard/attendance/:id"
+            element={<EmployeeAttendance />}
           ></Route>
           <Route
             path="/employee-dashboard/salary"
@@ -135,7 +142,7 @@ export default function AppRoutes() {
           ></Route>
           <Route
             path="/employee-dashboard/setting"
-            element={<SettingList />}
+            element={<Setting />}
             />
         </Route>
       </Routes>
