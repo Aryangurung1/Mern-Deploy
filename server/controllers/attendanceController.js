@@ -43,7 +43,7 @@ export const markDailyAttendance = async () => {
 
             console.log("Found Leave:", leave);
 
-            const status = leave ? "Absent" : "Present";
+            const status = leave ? "On Leave" : "Present";
 
             // ✅ Fix: Query using "YYYY-MM-DD" to match exact date
             const existingAttendance = await Attendance.findOne({
@@ -105,28 +105,6 @@ export const markAttendance = async (req, res) => {
         res.status(500).json({ message: "Error marking attendance", error });
     }
 };
-
-// Get attendance records
-// export const getAttendanceRecords = async (req, res) => {
-//     try {
-//         const { search, department, status, date, page = 1, limit = 10 } = req.query;
-//         const query = {};
-
-//         if (search) query.employeeName = { $regex: search, $options: "i" };
-//         if (department) query.departmentName = department;
-//         if (status) query.status = status;
-//         if (date) query.date = { $gte: new Date(date), $lt: new Date(date).setDate(new Date(date).getDate() + 1) };
-
-//         const records = await Attendance.find(query)
-//             .sort({ date: -1 })
-//             .skip((page - 1) * limit)
-//             .limit(Number(limit));
-
-//         res.status(200).json({ records, currentPage: page });
-//     } catch (error) {
-//         res.status(500).json({ message: "Error fetching attendance records", error });
-//     }
-// };
 
 export const getAttendanceRecords = async (req, res) => {
     try {
