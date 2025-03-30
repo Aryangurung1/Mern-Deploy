@@ -18,10 +18,13 @@ import WfhList from "./components/Dashboard/wfh/WfhList";
 import SalaryList from "./components/Dashboard/Salary/SalaryList";
 import Setting from "./components/Dashboard/Setting/SettingList";
 import List from "./components/Dashboard/leaves/List";
+import ListWfh from "./components/Dashboard/wfh/List";
 import AddLeave from "./components/Dashboard/leaves/Add";
+import AddWfh from "./components/Dashboard/wfh/Add"
 import Attendance from "./components/Dashboard/attendance/Attendance";
 import EmployeeAttendance from "./components/Dashboard/employeeAttendace/employeeAttendance";
 import LeaveDetail from "./components/Dashboard/leaves/LeaveDetail";
+import WfhDetail from "./components/Dashboard/wfh/WfhDetail";
 import NoticeList from "./components/notice/Notice";
 import HolidayTable from "./components/Dashboard/Holidays/Holidays";
 
@@ -58,9 +61,17 @@ export default function AppRoutes() {
           path="/admin-dashboard/employees/leaves/:id"
           element={<List />}
         ></Route>
-        <Route
+        <Route 
           path="/admin-dashboard/wfh"
           element={<WfhList />}
+        ></Route>
+        <Route 
+          path="/admin-dashboard/wfh/:id"
+          element={<WfhDetail />}
+        ></Route>
+        <Route 
+          path="/admin-dashboard/employees/wfh/:id"
+          element={<ListWfh />}
         ></Route>
         <Route
             path="/admin-dashboard/attendance"
@@ -129,8 +140,12 @@ export default function AppRoutes() {
             element={<AddLeave />}
           ></Route>
           <Route
-            path="/employee-dashboard/wfh"
-            element={<WfhList />}
+            path="/employee-dashboard/wfh/:id"
+            element={<ListWfh />}
+          ></Route>
+          <Route
+            path="/employee-dashboard/add-wfh"
+            element={<AddWfh />}
           ></Route>
          <Route
             path="/employee-dashboard/attendance/:id"

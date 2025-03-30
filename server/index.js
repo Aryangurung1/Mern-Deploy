@@ -4,6 +4,7 @@ import authRouter from './routes/auth.js'
 import departmentRouter from './routes/department.js'
 import employeeRouter from './routes/employee.js'
 import leaveRouter from './routes/leave.js'
+import wfhRouter from './routes/wfh.js'
 import settingRouter from './routes/setting.js'
 import dashboardRouter from './routes/dashboard.js'
 import connectToDatabase from './db/db.js'
@@ -24,6 +25,7 @@ app.use('/api/auth', authRouter)
 app.use('/api/department', departmentRouter)
 app.use('/api/employee', employeeRouter)
 app.use('/api/leave', leaveRouter)
+app.use('/api/wfh', wfhRouter)
 app.use('/api/setting', settingRouter)
 app.use('/api/dashboard', dashboardRouter)
 app.use('/api/attendance', attendanceRouter)
@@ -34,7 +36,7 @@ app.listen(process.env.PORT, () => {
 })
 
 // Schedule attendance marking at 12:15 AM daily
-cron.schedule("05 00 * * *", () => {
+cron.schedule("01 00 * * *", () => {
     markDailyAttendance();
-    console.log("Scheduled attendance marking executed at 12:22 PM.");
+    console.log("Scheduled attendance marking executed at 10:31 PM.");
 });
