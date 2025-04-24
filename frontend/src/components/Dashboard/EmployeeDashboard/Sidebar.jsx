@@ -38,7 +38,7 @@ const Sidebar = () => {
         <Gauge />
         <span>Leaves</span>
         </NavLink>
-        <NavLink to={`/employee-dashboard/wfh`} className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`} end>
+        <NavLink to={`/employee-dashboard/wfh/${user._id}`} className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`} end>
         <Gauge />
         <span>WFH</span>
         </NavLink>
