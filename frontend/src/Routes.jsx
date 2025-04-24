@@ -15,7 +15,6 @@ import EditEmployee from "./components/Dashboard/employee/EditEmployee";
 import Summary from "./components/Dashboard/EmployeeDashboard/Summary";
 import LeaveList from "./components/Dashboard/leaves/LeaveList";
 import WfhList from "./components/Dashboard/wfh/WfhList";
-import EventList from "./components/Dashboard/Events/EventList";
 import SalaryList from "./components/Dashboard/Salary/SalaryList";
 import Setting from "./components/Dashboard/Setting/SettingList";
 import List from "./components/Dashboard/leaves/List";
@@ -24,6 +23,7 @@ import Attendance from "./components/Dashboard/attendance/Attendance";
 import EmployeeAttendance from "./components/Dashboard/employeeAttendace/employeeAttendance";
 import LeaveDetail from "./components/Dashboard/leaves/LeaveDetail";
 import NoticeList from "./components/notice/Notice";
+import HolidayTable from "./components/Dashboard/Holidays/Holidays";
 
 export default function AppRoutes() {
   return (
@@ -67,8 +67,8 @@ export default function AppRoutes() {
             element={<Attendance />}
           ></Route>
         <Route
-          path="/admin-dashboard/events"
-          element={<EventList />}
+          path="/admin-dashboard/holidays"
+          element={<HolidayTable />}
         ></Route>
         <Route path="/admin-dashboard/notice" element={<NoticeList />} />
 
@@ -135,6 +135,10 @@ export default function AppRoutes() {
          <Route
             path="/employee-dashboard/attendance/:id"
             element={<EmployeeAttendance />}
+          ></Route>
+             <Route
+            path="/employee-dashboard/holidays"
+            element={<HolidayTable />}
           ></Route>
           <Route
             path="/employee-dashboard/salary"

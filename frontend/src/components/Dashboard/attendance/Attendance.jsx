@@ -104,7 +104,7 @@ const AttendanceTable = () => {
         >
           <option value="">All Status</option>
           <option value="Present">Present</option>
-          <option value="Absent">Absent</option>
+          <option value="On Leave">On Leave</option>
           <option value="Holiday">Holiday</option>
         </select>
 

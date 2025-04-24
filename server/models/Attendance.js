@@ -7,7 +7,7 @@ const attendanceSchema = new Schema({
     departmentName: { type: String, required: true },
     date: { type: Date, required: true, default: Date.now },
     day: { type: String, required: true },
-    status: { type: String, enum: ["Present", "Absent", "Holiday"], required: true }
+    status: { type: String, enum: ["Present", "On Leave", "Holiday"], required: true }
 });
 
 const Attendance = mongoose.model("Attendance", attendanceSchema);
