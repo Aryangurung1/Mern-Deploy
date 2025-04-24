@@ -1,4 +1,4 @@
-import { CircleDollarSign, ClipboardCheck, Gauge, Settings, User } from "lucide-react";
+import { CalendarX, CircleDollarSign, ClipboardCheck, Gauge, Settings, User } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
 
@@ -31,7 +31,7 @@ const Sidebar = () => {
           <span>Attendance</span>
         </NavLink>
         <NavLink to={`/employee-dashboard/holidays`} className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`} end>
-        <Gauge />
+        <CalendarX />
         <span>Holidays</span>
         </NavLink>
         <NavLink to={`/employee-dashboard/leaves/${user._id}`} className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`} end>

@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import {Banknote, Building2, CalendarDays, Gauge, HousePlug, Settings2, Users} from 'lucide-react'
+import {Banknote, Building2, CalendarDays, CalendarX, Gauge, HousePlug, Settings2, Users} from 'lucide-react'
 import { useAuth } from "../../context/authContext";
 const AdminSidebar = () => {
   const { user } = useAuth();
@@ -52,7 +52,7 @@ const AdminSidebar = () => {
           <span>WFH</span>
         </NavLink>
             <NavLink to="/admin-dashboard/holidays" className={({isActive}) => `${isActive ? "bg-blue-300" : " "} flex items-center space-x-4 block py-2.5 px-4 rounded`}>
-            <CalendarDays/>
+            <CalendarX/>
             <span>Holidays</span>
           </NavLink>
             </>
