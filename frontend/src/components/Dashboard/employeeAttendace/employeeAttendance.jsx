@@ -43,7 +43,11 @@ const EmployeeAttendance = () => {
   const columns = [
     { 
       accessorKey: "date", 
-      header: "Date"
+      header: "Date",
+      cell: ({ getValue }) => {
+        const date = getValue();
+        return date.split('T')[0]; // This will show only YYYY-MM-DD
+      }
     },
     { accessorKey: "day", header: "Day" },
     { 

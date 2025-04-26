@@ -57,7 +57,14 @@ const AttendanceTable = () => {
   const columns = [
     { accessorKey: "employeeName", header: "Employee Name" },
     { accessorKey: "departmentName", header: "Department" },
-    { accessorKey: "date", header: "Date" },
+    { 
+      accessorKey: "date", 
+      header: "Date",
+      cell: ({ getValue }) => {
+        const date = getValue();
+        return date.split('T')[0]; // This will show only YYYY-MM-DD
+      }
+    },
     { accessorKey: "day", header: "Day" },
     { 
       accessorKey: "status", 
