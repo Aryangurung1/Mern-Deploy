@@ -1,24 +1,23 @@
 import { useAuth } from '../../context/authContext'
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { LogOut, SwitchCamera } from 'lucide-react'
 
 const Navbar = () => {
     const { user, logout } = useAuth()
     const navigate = useNavigate()
     
- 
     const [currentSection, setCurrentSection] = useState('admin')
 
     useEffect(() => {
         // Check if we are on the employee-dashboard or admin-dashboard
         const currentPath = window.location.pathname;
-        if (currentPath === '/employee-dashboard') {
+        if (currentPath.includes('employee-dashboard')) {
             setCurrentSection('employee')
         } else {
             setCurrentSection('admin')
         }
     }, [])
-
 
     const toggleSection = () => {
         if (currentSection === 'admin') {
@@ -31,18 +30,28 @@ const Navbar = () => {
     }
 
     return (
-        <div className='flex items-center text-white justify-between h-12 bg-blue-300 px-5'>
-            <p>Welcome {user.name}</p>
-            <div className='flex items-center gap-8'>
-                {(user.roles.includes("hr") || user.roles.includes("accountant")) && (
+        <div className='flex items-center justify-between h-16 bg-white border-b border-gray-200 px-4 fixed top-0 right-0 left-64 z-10'>
+            <div className='flex items-center gap-2'>
+                <span className='text-gray-500'>Welcome,</span>
+                <span className='font-medium text-gray-700'>{user.name}</span>
+            </div>
+            <div className='flex items-center gap-3'>
+                {(user.roles?.includes("hr") || user.roles?.includes("accountant")) && (
                     <button
-                        className='px-4 py-1 bg-blue-600 hover:bg-blue-800'
+                        className='inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600 transition-colors duration-200'
                         onClick={toggleSection}
                     >
-                        {currentSection === 'employee' ? 'Admin section' : 'Employee section'}
+                        <SwitchCamera className="w-4 h-4" />
+                        <span>{currentSection === 'employee' ? 'Switch to Admin' : 'Switch to Employee'}</span>
                     </button>
                 )}
-                <button className='px-4 py-1 bg-blue-600 hover:bg-blue-800' onClick={logout}>Logout</button>
+                <button 
+                    className='inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors duration-200' 
+                    onClick={logout}
+                >
+                    <LogOut className="w-4 h-4" />
+                    <span>Logout</span>
+                </button>
             </div>
         </div>
     )
