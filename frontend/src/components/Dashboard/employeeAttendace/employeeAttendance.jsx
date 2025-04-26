@@ -8,6 +8,8 @@ import {
   flexRender,
 } from "@tanstack/react-table";
 import { useParams } from "react-router-dom";
+import { Calendar, Filter, X } from "lucide-react";
+
 const EmployeeAttendance = () => {
   const { id } = useParams();
   const [filters, setFilters] = useState({
@@ -39,111 +41,151 @@ const EmployeeAttendance = () => {
   });
 
   const columns = [
-    { accessorKey: "date", header: "Date" },
+    { 
+      accessorKey: "date", 
+      header: "Date"
+    },
     { accessorKey: "day", header: "Day" },
-    { accessorKey: "status", header: "Status" },
+    { 
+      accessorKey: "status", 
+      header: "Status",
+      cell: (info) => (
+        <span className={`px-2 py-1 rounded-full text-sm font-medium ${
+          info.getValue() === "Present" ? "bg-green-100 text-green-800" :
+          info.getValue() === "On Leave" ? "bg-yellow-100 text-yellow-800" :
+          info.getValue() === "Holiday" ? "bg-blue-100 text-blue-800" :
+          "bg-gray-100 text-gray-800"
+        }`}>
+          {info.getValue()}
+        </span>
+      )
+    },
   ];
 
   const table = useReactTable({
-    data: data?.records ?? [], // Ensure it defaults to an empty array
+    data: data?.records ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error loading data</p>;
+  if (isLoading) return (
+    <div className="flex items-center justify-center h-64">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+    </div>
+  );
+  
+  if (error) return (
+    <div className="flex items-center justify-center h-64">
+      <p className="text-red-500">Error loading attendance data</p>
+    </div>
+  );
 
   return (
-    <div className="p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl font-bold mb-4">My Attendance</h2>
+    <div className="p-6 bg-white shadow-lg rounded-lg space-y-6">
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-gray-800">My Attendance</h2>
+        <div className="flex items-center gap-2">
+          <Filter className="w-5 h-5 text-gray-500" />
+          <span className="text-gray-600">Filters</span>
+        </div>
+      </div>
 
       {/* Filters */}
-      <div className="flex gap-4 mb-4">
-        <select
-          className="border p-2 rounded"
-          value={filters.status}
-          onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-        >
-          <option value="">All Status</option>
-          <option value="Present">Present</option>
-          <option value="On Leave">On Leave</option>
-          <option value="Holiday">Holiday</option>
-        </select>
+      <div className="flex flex-wrap gap-4 items-center bg-gray-50 p-4 rounded-lg">
+        <div className="flex items-center gap-2 min-w-[200px]">
+          <select
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+            value={filters.status}
+            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+          >
+            <option value="">All Status</option>
+            <option value="Present">Present</option>
+            <option value="On Leave">On Leave</option>
+            <option value="Holiday">Holiday</option>
+          </select>
+        </div>
 
-        <input
-          type="date"
-          className="border p-2 rounded"
-          value={filters.startDate}
-          onChange={(e) =>
-            setFilters({ ...filters, startDate: e.target.value })
-          }
-        />
-
-        <input
-          type="date"
-          className="border p-2 rounded"
-          value={filters.endDate}
-          onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-        />
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="date"
+              className="pl-10 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+              value={filters.startDate}
+              onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+            />
+          </div>
+          <div className="relative">
+            <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <input
+              type="date"
+              className="pl-10 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+              value={filters.endDate}
+              onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+            />
+          </div>
+        </div>
 
         <button
-          className="px-4 py-2 bg-gray-300 rounded"
+          className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-200 rounded-lg transition-all"
           onClick={() => setFilters({ status: "", startDate: "", endDate: "" })}
         >
-          Clear Filters
+          <X className="w-4 h-4" />
+          Clear
         </button>
       </div>
 
       {/* Attendance Table */}
-      <table className="w-full border-collapse border border-gray-300">
-        <thead className="bg-gray-100">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th key={header.id} className="border p-2">
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.length > 0 ? (
-            table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className="border">
-                {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id} className="border p-2">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="bg-gray-50">
+                {headerGroup.headers.map((header) => (
+                  <th key={header.id} className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                    {flexRender(header.column.columnDef.header, header.getContext())}
+                  </th>
                 ))}
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={columns.length} className="text-center p-4">
-                No records found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody className="divide-y divide-gray-200">
+            {table.getRowModel().rows.length > 0 ? (
+              table.getRowModel().rows.map((row) => (
+                <tr key={row.id} className="hover:bg-gray-50">
+                  {row.getVisibleCells().map((cell) => (
+                    <td key={cell.id} className="px-6 py-4 text-sm text-gray-600">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
+                  No attendance records found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {/* Pagination */}
-      <div className="mt-4 flex justify-between">
+      <div className="flex items-center justify-between pt-4 border-t">
         <button
-          className="px-4 py-2 bg-gray-200 rounded"
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
         >
           Previous
         </button>
-        <span>Page {page}</span>
+        <span className="text-sm text-gray-700">
+          Page {page}
+        </span>
         <button
-          className="px-4 py-2 bg-gray-200 rounded"
+          className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={() => setPage((prev) => prev + 1)}
           disabled={!data?.records || data.records.length < limit}
         >

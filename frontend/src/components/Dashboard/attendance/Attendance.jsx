@@ -8,7 +8,7 @@ import {
   getPaginationRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { Search, Calendar, Filter, X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { Search, Calendar, X, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
 
 const AttendanceTable = () => {

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchDepartments } from "../../../utils/EmployeeHelper";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-import { Loader, ArrowLeft, Upload } from "lucide-react";
+import { Loader, ArrowLeft, Upload, User, Mail, Building2, Calendar, Phone, MapPin, Briefcase, Users } from "lucide-react";
 import toast from "react-hot-toast";
 
 const FormField = ({ label, children, required }) => (
@@ -16,8 +16,20 @@ const FormField = ({ label, children, required }) => (
 
 const AddEmployee = () => {
   const [departments, setDepartments] = useState([]);
-  const [formData, setFormData] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    dob: "",
+    gender: "",
+    phone: "",
+    address: "",
+    department: "",
+    designation: "",
+    role: "",
+    profileImage: null,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
 
@@ -32,7 +44,7 @@ const AddEmployee = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
-    if (name === "image") {
+    if (name === "profileImage") {
       const file = files[0];
       setFormData((prevData) => ({ ...prevData, [name]: file }));
       
@@ -58,7 +70,8 @@ const AddEmployee = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSubmitting(true);
+    const loadingToast = toast.loading("Adding new employee...");
 
     try {
       // Validate required fields
@@ -78,7 +91,7 @@ const AddEmployee = () => {
       const missingFields = requiredFields.filter(field => !formData[field]);
       if (missingFields.length > 0) {
         toast.error(`Please fill in all required fields: ${missingFields.join(', ')}`);
-        setIsLoading(false);
+        setIsSubmitting(false);
         return;
       }
 
@@ -90,9 +103,9 @@ const AddEmployee = () => {
       
       // Append all form fields
       Object.keys(formData).forEach((key) => {
-        if (key === 'image') {
+        if (key === 'profileImage') {
           if (formData[key]) {
-            formDataObj.append('image', formData[key]);
+            formDataObj.append('profileImage', formData[key]);
           }
         } else {
           formDataObj.append(key, formData[key]);
@@ -120,7 +133,8 @@ const AddEmployee = () => {
       const errorMessage = error.response?.data?.error || error.response?.data?.message || "Failed to add employee";
       toast.error(errorMessage);
     } finally {
-      setIsLoading(false);
+      toast.dismiss(loadingToast);
+      setIsSubmitting(false);
     }
   };
 
@@ -155,7 +169,7 @@ const AddEmployee = () => {
                 </div>
                 <input
                   type="file"
-                  name="image"
+                  name="profileImage"
                   onChange={handleChange}
                   accept="image/*"
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
@@ -310,10 +324,10 @@ const AddEmployee = () => {
             <div className="pt-4 border-t border-gray-200">
               <button
                 type="submit"
-                disabled={isLoading}
+                disabled={isSubmitting}
                 className="w-full flex justify-center items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200"
               >
-                {isLoading ? (
+                {isSubmitting ? (
                   <>
                     <Loader className="w-5 h-5 animate-spin" />
                     <span>Adding Employee...</span>

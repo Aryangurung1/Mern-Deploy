@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { fetchDepartments } from "../../../utils/EmployeeHelper";
 import axios from "axios";
 import { useNavigate, useParams, Link } from "react-router-dom";
-import { Loader, ArrowLeft } from "lucide-react";
+import { Loader, ArrowLeft, Building2, User, Briefcase, DollarSign } from "lucide-react";
 import toast from "react-hot-toast";
 
-const FormField = ({ label, children, required }) => (
+const FormField = ({ label, children, required, icon: Icon }) => (
   <div className="space-y-1">
-    <label className="block text-sm font-medium text-gray-900">
+    <label className="block text-sm font-medium text-gray-900 flex items-center gap-2">
+      {Icon && <Icon className="w-4 h-4 text-gray-500" />}
       {label} {required && <span className="text-red-500">*</span>}
     </label>
     {children}
@@ -30,8 +31,12 @@ const EditEmployee = () => {
 
   useEffect(() => {
     const getDepartments = async () => {
-      const departments = await fetchDepartments();
-      setDepartments(departments);
+      try {
+        const departments = await fetchDepartments();
+        setDepartments(departments);
+      } catch (error) {
+        toast.error("Failed to fetch departments");
+      }
     };
     getDepartments();
   }, []);
@@ -116,7 +121,7 @@ const EditEmployee = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Edit Employee</h2>
@@ -124,7 +129,7 @@ const EditEmployee = () => {
           </div>
           <Link
             to="/admin-dashboard/employees"
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Employees</span>
@@ -132,29 +137,31 @@ const EditEmployee = () => {
         </div>
 
         <div className="bg-white shadow-sm rounded-lg border border-gray-200">
-          <form onSubmit={handleSubmit} className="p-6 space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit} className="p-6 space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Personal Information */}
-              <div className="space-y-4">
-                <h3 className="font-medium text-gray-900">Personal Information</h3>
-                <FormField label="Name" required>
+              <div className="space-y-6">
+                <h3 className="text-lg font-medium text-gray-900 pb-2 border-b border-gray-200">
+                  Personal Information
+                </h3>
+                <FormField label="Name" required icon={User}>
                   <input
                     type="text"
                     name="name"
                     value={employee.name}
                     onChange={handleChange}
                     placeholder="Enter employee name"
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm transition-colors"
                     required
                   />
                 </FormField>
 
-                <FormField label="Marital Status" required>
+                <FormField label="Marital Status" required icon={User}>
                   <select
                     name="maritalStatus"
                     value={employee.maritalStatus}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm transition-colors"
                     required
                   >
                     <option value="">Select status</option>
@@ -165,26 +172,28 @@ const EditEmployee = () => {
               </div>
 
               {/* Employment Information */}
-              <div className="space-y-4">
-                <h3 className="font-medium text-gray-900">Employment Information</h3>
-                <FormField label="Designation" required>
+              <div className="space-y-6">
+                <h3 className="text-lg font-medium text-gray-900 pb-2 border-b border-gray-200">
+                  Employment Information
+                </h3>
+                <FormField label="Designation" required icon={Briefcase}>
                   <input
                     type="text"
                     name="designation"
                     value={employee.designation}
                     onChange={handleChange}
                     placeholder="Enter designation"
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm transition-colors"
                     required
                   />
                 </FormField>
 
-                <FormField label="Department" required>
+                <FormField label="Department" required icon={Building2}>
                   <select
                     name="department"
                     value={employee.department}
                     onChange={handleChange}
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm transition-colors"
                     required
                   >
                     <option value="">Select department</option>
@@ -196,33 +205,40 @@ const EditEmployee = () => {
                   </select>
                 </FormField>
 
-                <FormField label="Salary" required>
+                <FormField label="Salary" required icon={DollarSign}>
                   <input
                     type="number"
                     name="salary"
                     value={employee.salary}
                     onChange={handleChange}
                     placeholder="Enter salary"
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm"
+                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-400 focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500 sm:text-sm transition-colors"
                     required
+                    min="0"
                   />
                 </FormField>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-gray-200">
+            <div className="flex justify-end space-x-4 pt-4 border-t border-gray-200">
+              <Link
+                to="/admin-dashboard/employees"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
+              >
+                Cancel
+              </Link>
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full flex justify-center items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <>
-                    <Loader className="w-5 h-5 animate-spin" />
-                    <span>Updating Employee...</span>
+                    <Loader className="w-4 h-4 mr-2 animate-spin" />
+                    Updating...
                   </>
                 ) : (
-                  <span>Update Employee</span>
+                  'Update Employee'
                 )}
               </button>
             </div>

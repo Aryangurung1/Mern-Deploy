@@ -38,28 +38,56 @@ const Add = () => {
     } 
   };
   return (
-    <div className="max-w-4xl mx-auto mt-10 bg-white p-8 rounded-md shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Request for Wfh</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="flex flex-col space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">From Date</label>
-              <input type="date" name="startDate" onChange={handleChange} className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required/>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">To Date</label>
-              <input type="date" name="endDate" onChange={handleChange} className="mt-1 p-2 block w-full border border-gray-300 rounded-md" required/>
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">Reason</label>
-            <textarea name="reason" placeholder="Reason" onChange={handleChange} className="w-full border border-gray-300"></textarea>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div className="p-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">Request Work From Home</h2>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">From Date</label>
+                  <input 
+                    type="date" 
+                    name="startDate" 
+                    onChange={handleChange} 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" 
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">To Date</label>
+                  <input 
+                    type="date" 
+                    name="endDate" 
+                    onChange={handleChange} 
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent" 
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Reason</label>
+                <textarea 
+                  name="reason" 
+                  placeholder="Please provide a reason for your WFH request" 
+                  onChange={handleChange} 
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent min-h-[120px]"
+                  required
+                ></textarea>
+              </div>
+              <div className="flex justify-end pt-4 border-t border-gray-200">
+                <button 
+                  type="submit" 
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 transition-colors"
+                >
+                  Submit Request
+                </button>
+              </div>
+            </form>
           </div>
         </div>
-        <button type="submit" className="w-full mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Request Wfh</button>
-      </form>
-      
+      </div>
     </div>
   )
 }
