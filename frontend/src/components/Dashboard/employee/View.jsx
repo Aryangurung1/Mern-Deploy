@@ -94,28 +94,30 @@ const View = () => {
           <div className="p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Profile Image */}
-              <div className="flex flex-col items-center space-y-4">
-                <div className="relative group">
-                  <div className="w-48 h-48 rounded-full overflow-hidden bg-gray-100 ring-4 ring-offset-4 ring-teal-100 transition-all duration-300 group-hover:ring-teal-200">
-                    {imageError ? (
-                      <div className="w-full h-full flex items-center justify-center bg-gray-50">
-                        <UserIcon className="w-24 h-24 text-gray-400" />
-                      </div>
-                    ) : (
-                      <img
-                        src={`${import.meta.env.VITE_EMPORA_LINK}/${employee.userId.profileImage}`}
-                        alt={employee.userId.name}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        onError={() => setImageError(true)}
-                      />
-                    )}
+              <div className="flex flex-col justify-center min-h-[400px]">
+                <div className="flex flex-col items-center space-y-6">
+                  <div className="relative group mt-8">
+                    <div className="w-48 h-48 rounded-full overflow-hidden bg-gray-100 ring-4 ring-offset-4 ring-teal-100 transition-all duration-300 group-hover:ring-teal-200">
+                      {imageError ? (
+                        <div className="w-full h-full flex items-center justify-center bg-gray-50">
+                          <UserIcon className="w-24 h-24 text-gray-400" />
+                        </div>
+                      ) : (
+                        <img
+                          src={`${import.meta.env.VITE_EMPORA_LINK}/${employee.userId.profileImage}`}
+                          alt={employee.userId.name}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          onError={() => setImageError(true)}
+                        />
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="text-center">
-                  <h3 className="text-2xl font-bold text-gray-900">{employee.userId.name}</h3>
-                  <div className="mt-2 flex items-center gap-2 justify-center">
-                    <span className="px-3 py-1 text-sm bg-teal-50 text-teal-700 rounded-full">{employee.designation}</span>
-                    <span className="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-full">{employee.department.dep_name}</span>
+                  <div className="text-center">
+                    <h3 className="text-2xl font-bold text-gray-900">{employee.userId.name}</h3>
+                    <div className="mt-2 flex items-center gap-2 justify-center">
+                      <span className="px-3 py-1 text-sm bg-teal-50 text-teal-700 rounded-full">{employee.designation}</span>
+                      <span className="px-3 py-1 text-sm bg-blue-50 text-blue-700 rounded-full">{employee.department.dep_name}</span>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -105,7 +105,7 @@ const EmployeeList = () => {
   }
 
   return (
-    <div className="p-6 pt-24 max-w-7xl mx-auto">
+    <div className="p-6 max-w-7xl mx-auto">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200">
         <div className="p-6">
           <div className="mb-8">
