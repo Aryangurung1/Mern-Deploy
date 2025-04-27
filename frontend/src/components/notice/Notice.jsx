@@ -9,6 +9,8 @@ const Notice = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({ show: false, noticeId: null, title: "" });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const baseURL = import.meta.env.VITE_EMPORA_LINK;
 
@@ -62,22 +64,26 @@ const Notice = () => {
     }
   };
 
-  // Delete notice
-  const handleDeleteNotice = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this notice?")) return;
+  // Updated delete notice function
+  const handleDeleteNotice = async () => {
+    if (!deleteModal.noticeId) return;
+    setIsDeleting(true);
     
     try {
-      const response = await axios.delete(`${baseURL}/api/notice/${id}`, {
+      const response = await axios.delete(`${baseURL}/api/notice/${deleteModal.noticeId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
       if (response.data.success) {
-        setNotices(notices.filter((notice) => notice._id !== id));
+        setNotices(notices.filter((notice) => notice._id !== deleteModal.noticeId));
         toast.success("Notice deleted successfully");
+        setDeleteModal({ show: false, noticeId: null, title: "" });
       }
     } catch (error) {
       toast.error("Failed to delete notice");
       console.error("Error deleting notice:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -186,7 +192,11 @@ const Notice = () => {
                           </div>
                         </div>
                         <button
-                          onClick={() => handleDeleteNotice(notice._id)}
+                          onClick={() => setDeleteModal({ 
+                            show: true, 
+                            noticeId: notice._id, 
+                            title: notice.title 
+                          })}
                           className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
                           title="Delete notice"
                         >
@@ -195,6 +205,51 @@ const Notice = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+              )}
+
+              {/* Delete Confirmation Modal */}
+              {deleteModal.show && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                  <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                        <AlertCircle className="w-6 h-6 text-red-600" />
+                      </div>
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
+                      Delete Notice
+                    </h3>
+                    <p className="text-gray-600 text-center mb-6">
+                      Are you sure you want to delete the notice "{deleteModal.title}"? This action cannot be undone.
+                    </p>
+                    <div className="flex justify-center gap-3">
+                      <button
+                        onClick={() => setDeleteModal({ show: false, noticeId: null, title: "" })}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                        disabled={isDeleting}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={handleDeleteNotice}
+                        disabled={isDeleting}
+                        className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center gap-2"
+                      >
+                        {isDeleting ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Deleting...
+                          </>
+                        ) : (
+                          <>
+                            <Trash2 className="w-4 h-4" />
+                            Delete Notice
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
@@ -308,7 +363,11 @@ const Notice = () => {
                         </div>
                       </div>
                       <button
-                        onClick={() => handleDeleteNotice(notice._id)}
+                        onClick={() => setDeleteModal({ 
+                          show: true, 
+                          noticeId: notice._id, 
+                          title: notice.title 
+                        })}
                         className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors duration-200"
                         title="Delete notice"
                       >
@@ -317,6 +376,51 @@ const Notice = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {deleteModal.show && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+                      <AlertCircle className="w-6 h-6 text-red-600" />
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 text-center mb-2">
+                    Delete Notice
+                  </h3>
+                  <p className="text-gray-600 text-center mb-6">
+                    Are you sure you want to delete the notice "{deleteModal.title}"? This action cannot be undone.
+                  </p>
+                  <div className="flex justify-center gap-3">
+                    <button
+                      onClick={() => setDeleteModal({ show: false, noticeId: null, title: "" })}
+                      className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                      disabled={isDeleting}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleDeleteNotice}
+                      disabled={isDeleting}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center gap-2"
+                    >
+                      {isDeleting ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Deleting...
+                        </>
+                      ) : (
+                        <>
+                          <Trash2 className="w-4 h-4" />
+                          Delete Notice
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>

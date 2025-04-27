@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { LeaveButtons } from "../../../utils/LeaveHelper";
-import { Search, CalendarDays, Loader2, Filter } from "lucide-react";
+import { Search, CalendarDays, Loader2, Filter, ChevronDown } from "lucide-react";
+import { months, formatDate, calculateDays, filterByMonth } from "../../../utils/DateHelper";
 
 const LeaveList = () => {
   const [leaves, setLeaves] = useState([]);
@@ -9,6 +10,7 @@ const LeaveList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [monthFilter, setMonthFilter] = useState("");
 
   const fetchLeaves = async () => {
     try {
@@ -33,12 +35,9 @@ const LeaveList = () => {
           name: leave.employeeId.userId.name,
           leaveType: leave.leaveType,
           department: leave.employeeId.department.dep_name,
-          startDate: new Date(leave.startDate).toLocaleDateString(),
-          endDate: new Date(leave.endDate).toLocaleDateString(),
-          days: Math.ceil(
-            (new Date(leave.endDate) - new Date(leave.startDate)) /
-              (1000 * 60 * 60 * 24)
-          ),
+          startDate: formatDate(leave.startDate),
+          endDate: formatDate(leave.endDate),
+          days: calculateDays(leave.startDate, leave.endDate),
           reason: leave.reason,
           status: leave.status,
           action: <LeaveButtons Id={leave._id} onUpdate={fetchLeaves} />,
@@ -77,8 +76,11 @@ const LeaveList = () => {
       );
     }
 
+    // Apply month filter
+    filtered = filterByMonth(filtered, monthFilter);
+
     setFilteredLeaves(filtered);
-  }, [searchTerm, statusFilter, leaves]);
+  }, [searchTerm, statusFilter, monthFilter, leaves]);
 
   if (isLoading) {
     return (
@@ -112,50 +114,67 @@ const LeaveList = () => {
           />
         </div>
 
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <Filter className="w-4 h-4" />
-            <span>Status:</span>
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <select
+              value={monthFilter}
+              onChange={(e) => setMonthFilter(e.target.value)}
+              className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none cursor-pointer"
+            >
+              {months.map((month) => (
+                <option key={month.label} value={month.value}>
+                  {month.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
           </div>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setStatusFilter(statusFilter === "pending" ? "" : "pending")}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                statusFilter === "pending"
-                  ? "bg-yellow-100 text-yellow-800"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              Pending
-            </button>
-            <button
-              onClick={() => setStatusFilter(statusFilter === "approved" ? "" : "approved")}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                statusFilter === "approved"
-                  ? "bg-green-100 text-green-800"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              Approved
-            </button>
-            <button
-              onClick={() => setStatusFilter(statusFilter === "rejected" ? "" : "rejected")}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
-                statusFilter === "rejected"
-                  ? "bg-red-100 text-red-800"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
-            >
-              Rejected
-            </button>
-            {statusFilter && (
+
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 text-sm text-gray-500">
+              <Filter className="w-4 h-4" />
+              <span>Status:</span>
+            </div>
+            <div className="flex gap-2">
               <button
-                onClick={() => setStatusFilter("")}
-                className="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
+                onClick={() => setStatusFilter(statusFilter === "pending" ? "" : "pending")}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  statusFilter === "pending"
+                    ? "bg-yellow-100 text-yellow-800"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
               >
-                Clear
+                Pending
               </button>
-            )}
+              <button
+                onClick={() => setStatusFilter(statusFilter === "approved" ? "" : "approved")}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  statusFilter === "approved"
+                    ? "bg-green-100 text-green-800"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                Approved
+              </button>
+              <button
+                onClick={() => setStatusFilter(statusFilter === "rejected" ? "" : "rejected")}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                  statusFilter === "rejected"
+                    ? "bg-red-100 text-red-800"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
+              >
+                Rejected
+              </button>
+              {statusFilter && (
+                <button
+                  onClick={() => setStatusFilter("")}
+                  className="px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition-all"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </div>

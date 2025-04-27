@@ -24,6 +24,16 @@ export const columns = [
         width: "150px",
     },
     {
+        name: "From",
+        selector: (row) => row.startDate,
+        width: "120px",
+    },
+    {
+        name: "To",
+        selector: (row) => row.endDate,
+        width: "120px",
+    },
+    {
         name: "Days",
         selector: (row) => row.days,
         width: "70px",
