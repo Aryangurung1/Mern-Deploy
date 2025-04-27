@@ -305,6 +305,7 @@ const AddEmployee = () => {
                     <option value="employee">Employee</option>
                     <option value="admin">Admin</option>
                     <option value="hr">HR</option>
+                    <option value="accountant">Accountant</option>
                   </select>
                 </FormField>
 

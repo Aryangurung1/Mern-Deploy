@@ -8,12 +8,25 @@ import {
   HousePlug,
   Settings2,
   Users,
-  Bell
+  Bell,
+  Loader2
 } from 'lucide-react'
 import { useAuth } from "../../context/authContext";
 
 const AdminSidebar = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="bg-white border-r border-gray-200 fixed left-0 top-0 h-screen w-64 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-teal-600" />
+      </div>
+    );
+  }
+
+  // Ensure user and roles exist
+  const userRoles = user?.roles || [];
 
   return (
     <div className="bg-white border-r border-gray-200 fixed left-0 top-0 h-screen w-64">
@@ -35,7 +48,7 @@ const AdminSidebar = () => {
           <span>Dashboard</span>
         </NavLink>
         
-        {!user.roles.includes("accountant") && (
+        {!userRoles.includes("accountant") && (
           <>
             <NavLink 
               to="/admin-dashboard/employees" 
@@ -109,7 +122,7 @@ const AdminSidebar = () => {
           <span>Leave</span>
         </NavLink>
 
-        {!user.roles.includes("hr") && (
+        {!userRoles.includes("hr") && (
           <NavLink 
             to="/admin-dashboard/salary" 
             className={({isActive}) => `flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${

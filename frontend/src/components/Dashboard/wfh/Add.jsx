@@ -41,7 +41,12 @@ const Add = () => {
         navigate(`/employee-dashboard/wfh/${user._id}`);
       }
     } catch (error) {
-      toast.error(error.response?.data?.error || "Failed to submit WFH request");
+      const errorMessage = error.response?.data?.error || "Failed to submit WFH request";
+      if (errorMessage.includes("Insufficient WFH credits")) {
+        toast.error(errorMessage, { duration: 5000 });
+      } else {
+        toast.error(errorMessage);
+      }
     } finally {
       toast.dismiss(loadingToast);
     }

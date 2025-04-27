@@ -2,10 +2,11 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/authContext";
-import { Home, Plus, Loader2 } from "lucide-react";
+import { Home, Plus, Loader2, CreditCard } from "lucide-react";
 
 const List = () => {
   const [wfhs, setWfhs] = useState(null);
+  const [credits, setCredits] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   let sno = 1;
   const { id } = useParams();
@@ -28,6 +29,7 @@ const List = () => {
       );
       if (response.data.success) {
         setWfhs(response.data.wfhs);
+        setCredits(response.data.credits);
       }
     } catch (error) {
       console.error("Error fetching WFH requests:", error);
@@ -76,6 +78,19 @@ const List = () => {
           </Link>
         )}
       </div>
+
+      {credits && (
+        <div className="bg-gray-50 p-4 rounded-lg flex items-center gap-3">
+          <CreditCard className="w-5 h-5 text-teal-600" />
+          <div>
+            <h3 className="font-medium text-gray-900">WFH Credits This Month</h3>
+            <p className="text-sm text-gray-600">
+              {credits.remaining} days remaining out of {credits.total} days
+              {credits.used > 0 && ` (${credits.used} days used)`}
+            </p>
+          </div>
+        </div>
+      )}
 
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
