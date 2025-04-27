@@ -1,4 +1,5 @@
 import Department from "../models/Department.js";
+import Employee from "../models/Employee.js";
 
 const getDepartments = async (req, res) => {
     try {
@@ -50,16 +51,43 @@ const updateDepartment = async (req, res) => {
   }
   }
 
-  const deleteDepartment = async (req, res) => {
-    try{
-      const {id} = req.params;
-      const deletedep = await Department.findById({_id: id})
-      await deletedep.deleteOne()
-      return res.status(200).json({success: true, deletedep})
-    } catch(error) {
-        return res.status(500).json({success: false, error: "Delete department server error"})
-    }
-  }
+const deleteDepartment = async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    // Check if department exists
+    const department = await Department.findById(id);
+    if (!department) {
+      return res.status(404).json({ 
+        success: false, 
+        error: "Department not found" 
+      });
+    }
+
+    // Check if there are any employees in this department
+    const employeesInDepartment = await Employee.find({ department: id });
+    if (employeesInDepartment.length > 0) {
+      return res.status(400).json({ 
+        success: false, 
+        error: "Cannot delete department with existing employees. Please reassign or remove employees first." 
+      });
+    }
+
+    // Delete the department
+    const deletedDepartment = await Department.findByIdAndDelete(id);
+    
+    return res.status(200).json({
+      success: true, 
+      message: "Department deleted successfully",
+      department: deletedDepartment
+    });
+  } catch (error) {
+    console.error("Delete department error:", error);
+    return res.status(500).json({
+      success: false, 
+      error: "Delete department server error"
+    });
+  }
+}
 
 export { addDepartment , getDepartments, getDepartment, updateDepartment, deleteDepartment};
