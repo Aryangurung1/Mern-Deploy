@@ -57,7 +57,9 @@ export const columns = [
   {
     name: "Action",
     selector: (row) => row.action,
-    center: true,
+    style: {
+      justifyContent: "center"
+    }
   },
 ];
 
@@ -110,6 +112,7 @@ export const EmployeeButtons = ({ Id, onDelete }) => {
         </button>
         <button 
           className="p-1.5 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition-colors"
+          onClick={() => navigate(`/admin-dashboard/salary?employeeId=${Id}`)}
           title="Salary Details"
         >
           <DollarSign className="w-4 h-4" />

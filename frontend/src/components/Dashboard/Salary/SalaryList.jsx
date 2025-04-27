@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { Search, Plus } from "lucide-react";
+import { Search, Plus, ArrowLeft } from "lucide-react";
 import { toast } from "react-hot-toast";
 import DistributeSalaryModal from "./DistributeSalaryModal";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/authContext";
 
 const SalaryList = () => {
@@ -15,11 +15,15 @@ const SalaryList = () => {
   const [departments, setDepartments] = useState([]);
   const [showDistributeModal, setShowDistributeModal] = useState(false);
   const [loadingDepartments, setLoadingDepartments] = useState(true);
+  const navigate = useNavigate();
 
   // Check if we're in employee dashboard and get user context
   const location = useLocation();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const isEmployeeView = location.pathname.includes('employee-dashboard');
+  const employeeIdParam = searchParams.get('employeeId');
+  const isSpecificEmployeeView = !!employeeIdParam;
 
   const months = [
     "January", "February", "March", "April", "May", "June",
@@ -39,18 +43,24 @@ const SalaryList = () => {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         params: {
-          search: !isEmployeeView ? searchTerm : undefined,
+          search: !isSpecificEmployeeView ? searchTerm : undefined,
           month: selectedMonth,
-          department: !isEmployeeView ? selectedDepartment : undefined,
+          department: !isSpecificEmployeeView ? selectedDepartment : undefined,
+          employeeId: employeeIdParam,
         },
       });
       
-      // Filter salaries for employee view to only show their own salary
+      // Filter salaries based on view type and parameters
       if (isEmployeeView) {
         const employeeSalaries = response.data.filter(salary => 
           salary.employeeId.userId._id === user._id
         );
         setSalaries(employeeSalaries);
+      } else if (employeeIdParam) {
+        const filteredSalaries = response.data.filter(salary => 
+          salary.employeeId._id === employeeIdParam
+        );
+        setSalaries(filteredSalaries);
       } else {
         setSalaries(response.data);
       }
@@ -63,7 +73,7 @@ const SalaryList = () => {
 
   // Fetch departments for filter
   const fetchDepartments = async () => {
-    if (isEmployeeView) return; // Don't fetch departments in employee view
+    if (isEmployeeView || isSpecificEmployeeView) return; // Don't fetch departments in employee view
     
     try {
       setLoadingDepartments(true);
@@ -92,16 +102,27 @@ const SalaryList = () => {
 
   useEffect(() => {
     fetchDepartments();
-  }, [isEmployeeView]);
+  }, [isEmployeeView, isSpecificEmployeeView]);
 
   useEffect(() => {
     fetchSalaries();
-  }, [searchTerm, selectedMonth, selectedDepartment, isEmployeeView]);
+  }, [searchTerm, selectedMonth, selectedDepartment, isEmployeeView, employeeIdParam]);
 
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Salary Management</h1>
+        <div className="flex items-center gap-4">
+          {isSpecificEmployeeView && (
+            <button
+              onClick={() => navigate(-1)}
+              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back
+            </button>
+          )}
+          <h1 className="text-2xl font-bold text-gray-800">Salary Management</h1>
+        </div>
         {!isEmployeeView && (
           <button
             onClick={() => setShowDistributeModal(true)}
@@ -115,8 +136,8 @@ const SalaryList = () => {
 
       {/* Filters */}
       <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-        <div className={`grid ${isEmployeeView ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'} gap-4`}>
-          {!isEmployeeView && (
+        <div className={`grid ${isSpecificEmployeeView ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'} gap-4`}>
+          {!isSpecificEmployeeView && !isEmployeeView && (
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
               <input
@@ -140,7 +161,7 @@ const SalaryList = () => {
             ))}
           </select>
 
-          {!isEmployeeView && (
+          {!isSpecificEmployeeView && !isEmployeeView && (
             <select
               className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
               value={selectedDepartment}

@@ -3,9 +3,10 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/authContext";
 import { CalendarDays, Plus, Loader2 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const List = () => {
-  const [leaves, setLeaves] = useState(null);
+  const [leaves, setLeaves] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   let sno = 1;
   const { id } = useParams();
@@ -21,22 +22,43 @@ const List = () => {
         console.error("Environment variable VITE_EMPORA_LINK is not set.");
         return;
       }
+
+      // Get the correct ID based on view type
+      const userId = isEmployeeView ? user?._id : id;
+      
+      if (!userId) {
+        toast.error("User ID is missing");
+        return;
+      }
+
+      // Get the role, defaulting to "EMPLOYEE" for employee view
+      const role = isEmployeeView ? "EMPLOYEE" : "ADMIN";
+
       const response = await axios.get(
-        `${baseURL}/api/leave/${id}/${user.role}`,
+        `${baseURL}/api/leave/${userId}/${role}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
+
       if (response.data.success) {
-        setLeaves(response.data.leaves);
+        setLeaves(response.data.leaves || []);
+      } else {
+        toast.error(response.data.error || "Failed to fetch leaves");
+        setLeaves([]);
       }
     } catch (error) {
       console.error("Error fetching leaves:", error);
-      if (error.response && !error.response.data.success) {
-        alert(error.response.data.error);
+      if (error.response?.status === 500) {
+        toast.error("Server error. Please try again later.");
+      } else if (error.response?.data?.error) {
+        toast.error(error.response.data.error);
+      } else {
+        toast.error("Failed to fetch leave records");
       }
+      setLeaves([]);
     } finally {
       setIsLoading(false);
     }
@@ -44,7 +66,7 @@ const List = () => {
 
   useEffect(() => {
     fetchLeaves();
-  }, []);
+  }, [id, user]);
 
   if (isLoading) {
     return (

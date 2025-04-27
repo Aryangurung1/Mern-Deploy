@@ -25,16 +25,36 @@ const addLeave = async (req, res) => {
 const getLeave = async (req, res) => {
   try {
     const { id, role } = req.params;
-    let leaves
-    if(role === "admin") {
-      leaves = await Leave.find({ employeeId: id });
-    } else {
+    let leaves;
+    
+    // Check if role is admin or HR (both should have same access)
+    if (role === "ADMIN" || role === "HR") {
+      leaves = await Leave.find({ employeeId: id }).populate({
+        path: "employeeId",
+        populate: [
+          { path: "department", select: "dep_name" },
+          { path: "userId", select: "name" },
+        ],
+      });
+    } else if (role === "EMPLOYEE") {
       const employee = await Employee.findOne({ userId: id });
-      leaves = await Leave.find({ employeeId: employee._id });
+      if (!employee) {
+        return res.status(404).json({ success: false, error: "Employee not found" });
+      }
+      leaves = await Leave.find({ employeeId: employee._id }).populate({
+        path: "employeeId",
+        populate: [
+          { path: "department", select: "dep_name" },
+          { path: "userId", select: "name" },
+        ],
+      });
+    } else {
+      return res.status(400).json({ success: false, error: "Invalid role" });
     }
     
     return res.status(200).json({ success: true, leaves });
   } catch (error) {
+    console.error("Get leave error:", error);
     res.status(500).json({ success: false, error: "Get leave server error" });
   }
 };
