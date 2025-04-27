@@ -49,7 +49,7 @@ const HolidayTable = () => {
                 <td className="px-6 py-4 text-sm text-gray-600">{holiday.englishDate}</td>
                 <td className="px-6 py-4 text-sm">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    holiday.day === "Saturday" || holiday.day === "Sunday"
+                    holiday.day === "Saturday"
                       ? "bg-red-100 text-red-800"
                       : "bg-blue-100 text-blue-800"
                   }`}>
