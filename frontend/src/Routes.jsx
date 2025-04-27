@@ -60,6 +60,11 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<Navigate to="/admin-dashboard" />}></Route>
         <Route path="/login" element={<Login />}></Route>
+        <Route path="/unauthorized" element={
+          <PrivateRoutes>
+            <Navigate to="/login" replace />
+          </PrivateRoutes>
+        } />
         <Route
           path="/admin-dashboard"
           element={

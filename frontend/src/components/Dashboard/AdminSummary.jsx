@@ -101,7 +101,7 @@ const AdminSummary = () => {
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-gray-500 mb-1">Monthly Salary</p>
-                <h3 className="text-3xl font-bold text-gray-900">${summary.data.totalSalary}</h3>
+                <h3 className="text-3xl font-bold text-gray-900">Nrs. {summary.data.totalSalary}</h3>
               </div>
               <div className="bg-[#E7FAF5] p-3 rounded-lg">
                 <Wallet className="w-6 h-6 text-[#00A76F]" strokeWidth={2} />

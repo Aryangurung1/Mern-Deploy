@@ -29,16 +29,19 @@ const Navbar = () => {
         }
     }
 
+    // Ensure roles is always an array
+    const userRoles = user?.roles || [user?.role] || [];
+
     return (
         <>
             <div className='h-16'></div> {/* Spacer div to prevent content overlap */}
             <div className='flex items-center justify-between h-16 bg-white border-b border-gray-200 px-4 fixed top-0 right-0 left-64 z-10'>
                 <div className='flex items-center gap-2'>
                     <span className='text-gray-500'>Welcome,</span>
-                    <span className='font-medium text-gray-700'>{user.name}</span>
+                    <span className='font-medium text-gray-700'>{user?.name}</span>
                 </div>
                 <div className='flex items-center gap-3'>
-                    {(user.roles?.includes("hr") || user.roles?.includes("accountant")) && (
+                    {userRoles.some(role => ["hr", "accountant"].includes(role)) && (
                         <button
                             className='inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-600 transition-colors duration-200'
                             onClick={toggleSection}

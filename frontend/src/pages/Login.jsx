@@ -20,10 +20,14 @@ const Login = () => {
     try {
       const response = await axios.post("http://localhost:3000/api/auth/login", { email, password });
       if (response.data.success) {
-        login(response.data.user);
+        const userData = response.data.user;
+        // Ensure roles is always an array
+        userData.roles = userData.roles || [userData.role];
+        
+        login(userData);
         localStorage.setItem("token", response.data.token);
         
-        const isAdmin = ["admin", "hr", "accountant"].includes(response.data.user.role);
+        const isAdmin = userData.roles.some(role => ["admin", "hr", "accountant"].includes(role));
         navigate(isAdmin ? "/admin-dashboard" : "/employee-dashboard");
         
         toast.success("Login successful!");

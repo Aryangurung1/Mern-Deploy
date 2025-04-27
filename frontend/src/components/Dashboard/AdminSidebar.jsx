@@ -26,7 +26,9 @@ const AdminSidebar = () => {
   }
 
   // Ensure user and roles exist
-  const userRoles = user?.roles || [];
+  const userRoles = user?.roles || [user?.role] || [];
+  const isAccountant = userRoles.includes("accountant");
+  const isHR = userRoles.includes("hr");
 
   return (
     <div className="bg-white border-r border-gray-200 fixed left-0 top-0 h-screen w-64">
@@ -37,18 +39,20 @@ const AdminSidebar = () => {
       </div>
 
       <div className="p-3 space-y-1 h-[calc(100vh-4rem)] overflow-y-auto">
-        <NavLink 
-          to="/admin-dashboard" 
-          className={({isActive}) => `flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${
-            isActive ? "bg-teal-50 text-teal-600" : "text-gray-600 hover:bg-gray-100"
-          }`}
-          end
-        >
-          <Gauge className="w-5 h-5" />
-          <span>Dashboard</span>
-        </NavLink>
+        {!isAccountant && (
+          <NavLink 
+            to="/admin-dashboard" 
+            className={({isActive}) => `flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${
+              isActive ? "bg-teal-50 text-teal-600" : "text-gray-600 hover:bg-gray-100"
+            }`}
+            end
+          >
+            <Gauge className="w-5 h-5" />
+            <span>Dashboard</span>
+          </NavLink>
+        )}
         
-        {!userRoles.includes("accountant") && (
+        {!isAccountant && (
           <>
             <NavLink 
               to="/admin-dashboard/employees" 
@@ -109,20 +113,20 @@ const AdminSidebar = () => {
               <CalendarX className="w-5 h-5" />
               <span>Holidays</span>
             </NavLink>
+
+            <NavLink 
+              to="/admin-dashboard/leaves" 
+              className={({isActive}) => `flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${
+                isActive ? "bg-teal-50 text-teal-600" : "text-gray-600 hover:bg-gray-100"
+              }`}
+            >
+              <CalendarDays className="w-5 h-5" />
+              <span>Leave</span>
+            </NavLink>
           </>
         )}
 
-        <NavLink 
-          to="/admin-dashboard/leaves" 
-          className={({isActive}) => `flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${
-            isActive ? "bg-teal-50 text-teal-600" : "text-gray-600 hover:bg-gray-100"
-          }`}
-        >
-          <CalendarDays className="w-5 h-5" />
-          <span>Leave</span>
-        </NavLink>
-
-        {!userRoles.includes("hr") && (
+        {!isHR && (
           <NavLink 
             to="/admin-dashboard/salary" 
             className={({isActive}) => `flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${

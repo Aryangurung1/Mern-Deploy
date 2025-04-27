@@ -11,6 +11,9 @@ const List = () => {
   const { id } = useParams();
   const { user } = useAuth();
 
+  // Check if we're in employee view (URL contains employee-dashboard)
+  const isEmployeeView = window.location.pathname.includes('employee-dashboard');
+
   const fetchLeaves = async () => {
     try {
       const baseURL = import.meta.env.VITE_EMPORA_LINK;
@@ -58,7 +61,7 @@ const List = () => {
           <h2 className="text-2xl font-bold text-gray-800">Leave History</h2>
           <CalendarDays className="w-6 h-6 text-gray-400" />
         </div>
-        {user.roles.includes("employee") && (
+        {isEmployeeView && (
           <Link
             to="/employee-dashboard/add-leave"
             className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
