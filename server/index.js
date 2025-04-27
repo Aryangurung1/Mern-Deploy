@@ -12,9 +12,7 @@ import cron from "node-cron";
 import { markDailyAttendance } from "./controllers/attendanceController.js";
 import attendanceRouter from './routes/attendanceRoutes.js'
 import noticeRouter from "./routes/notice.js";
-
-
-
+import salaryRouter from './routes/salary.js';
 
 connectToDatabase()
 const app = express()
@@ -30,6 +28,7 @@ app.use('/api/setting', settingRouter)
 app.use('/api/dashboard', dashboardRouter)
 app.use('/api/attendance', attendanceRouter)
 app.use("/api/notice", noticeRouter);
+app.use('/api/salary', salaryRouter);
 
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port 3000`)
