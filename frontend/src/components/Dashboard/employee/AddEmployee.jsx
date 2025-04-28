@@ -27,7 +27,7 @@ const AddEmployee = () => {
     department: "",
     designation: "",
     role: "",
-    profileImage: null,
+    image: null,
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
@@ -44,7 +44,7 @@ const AddEmployee = () => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
 
-    if (name === "profileImage") {
+    if (name === "image") {
       const file = files[0];
       setFormData((prevData) => ({ ...prevData, [name]: file }));
       
@@ -103,9 +103,9 @@ const AddEmployee = () => {
       
       // Append all form fields
       Object.keys(formData).forEach((key) => {
-        if (key === 'profileImage') {
+        if (key === 'image') {
           if (formData[key]) {
-            formDataObj.append('profileImage', formData[key]);
+            formDataObj.append('image', formData[key]);
           }
         } else {
           formDataObj.append(key, formData[key]);
@@ -169,7 +169,7 @@ const AddEmployee = () => {
                 </div>
                 <input
                   type="file"
-                  name="profileImage"
+                  name="image"
                   onChange={handleChange}
                   accept="image/*"
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
