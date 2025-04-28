@@ -1,6 +1,8 @@
 import multer from "multer";
 import Employee from "../models/Employee.js";
 import User from "../models/user.js";
+import Leave from "../models/Leave.js";
+import Wfh from "../models/Wfh.js";
 import bcrypt from "bcrypt";
 import path from "path";
 
@@ -157,4 +159,39 @@ const updateEmployee = async (req, res) => {
   }
 };
 
-export { addEmployee, upload, getEmployees, getEmployee, updateEmployee };
+const deleteEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Find the employee first to get the userId
+    const employee = await Employee.findById(id);
+    if (!employee) {
+      return res.status(404).json({ success: false, error: "Employee not found" });
+    }
+
+    // Delete all associated leaves
+    await Leave.deleteMany({ employeeId: id });
+
+    // Delete all associated WFH requests
+    await Wfh.deleteMany({ employeeId: id });
+
+    // Delete the associated user
+    await User.findByIdAndDelete(employee.userId);
+
+    // Delete the employee
+    await Employee.findByIdAndDelete(id);
+
+    return res.status(200).json({ 
+      success: true, 
+      message: "Employee and all associated records deleted successfully" 
+    });
+  } catch (error) {
+    console.error("Delete employee error:", error);
+    return res.status(500).json({ 
+      success: false, 
+      error: "Delete employee server error" 
+    });
+  }
+};
+
+export { addEmployee, upload, getEmployees, getEmployee, updateEmployee, deleteEmployee };

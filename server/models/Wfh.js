@@ -9,6 +9,8 @@ const leaveSchema = new Schema({
     status: { type: String, enum: ["Pending", "Approved", "Rejected"], default: "Pending" },
     appliedAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
+    monthYear: { type: String, required: true }, // To track which month this WFH belongs to
+    daysCount: { type: Number, required: true }, // Number of WFH days for this request
 })
 
 const Wfh = mongoose.model("Wfh", leaveSchema);

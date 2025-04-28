@@ -12,7 +12,6 @@ const getSummary = async (req, res) => {
     {$group: {_id: null, totalSalary: {$sum: "$salary"}}}  
     ])
 
-    const employeeAppliedForLeave = await Leave.distinct('employeeId');
     const leaveStatus = await Leave.aggregate([
       {
         $group: {
@@ -23,13 +22,10 @@ const getSummary = async (req, res) => {
     ]);
 
     const leaveSummary = {
-      appliedFor: employeeAppliedForLeave.length,
-      approved:
-        leaveStatus.find((item) => item._id === "Approved")?.count || 0,
-      rejected:
-        leaveStatus.find((item) => item._id === "Rejected")?.count || 0,
-      pending:
-        leaveStatus.find((item) => item._id === "Pending")?.count || 0,
+      appliedFor: leaveStatus.reduce((total, item) => total + item.count, 0),
+      approved: leaveStatus.find((item) => item._id === "Approved")?.count || 0,
+      rejected: leaveStatus.find((item) => item._id === "Rejected")?.count || 0,
+      pending: leaveStatus.find((item) => item._id === "Pending")?.count || 0,
     }
 
     return res.status(200).json({ success: true, totalEmployees, totalDepartments, totalSalary: totalSalaries[0]?.totalSalary || 0 , leaveSummary });
