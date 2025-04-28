@@ -27,25 +27,25 @@ export const markDailyAttendance = async () => {
 
             console.log(`Checking leave for employee: ${emp._id}`);
 
-            // ✅ Fix: Store and compare dates as "YYYY-MM-DD"
-            const leaveDetails = await Leave.findOne({
+            // Check for any approved leaves that overlap with today
+            const leaveDetails = await Leave.find({
                 employeeId: emp._id,
                 status: "Approved",
+                $or: [
+                    {
+                        startDate: { $lte: formattedDate },
+                        endDate: { $gte: formattedDate }
+                    }
+                ]
             });
 
-            let leave = false;
-            if (leaveDetails) {
-                const leaveStart = moment(leaveDetails.startDate).tz("Asia/Kathmandu").startOf("day");
-                const leaveEnd = moment(leaveDetails.endDate).tz("Asia/Kathmandu").startOf("day");
+            // If any approved leave exists for today, mark as "On Leave"
+            const isOnLeave = leaveDetails.length > 0;
+            console.log("Found Leave:", isOnLeave);
 
-                leave = leaveStart.isSameOrBefore(today) && leaveEnd.isSameOrAfter(today);
-            }
+            const status = isOnLeave ? "On Leave" : (isHoliday ? "Holiday" : "Present");
 
-            console.log("Found Leave:", leave);
-
-            const status = leave ? "On Leave" : "Present";
-
-            // ✅ Fix: Query using "YYYY-MM-DD" to match exact date
+            // Check for existing attendance
             const existingAttendance = await Attendance.findOne({
                 employeeId: emp._id,
                 date: formattedDate
@@ -56,9 +56,9 @@ export const markDailyAttendance = async () => {
                     employeeId: emp._id,
                     employeeName: emp.userId.name,
                     departmentName: emp.department ? emp.department.dep_name : "Unknown",
-                    date: formattedDate, // Store as string, not Date object
+                    date: formattedDate,
                     day,
-                    status: isHoliday ? "Holiday" : status,
+                    status
                 });
             }
         }
