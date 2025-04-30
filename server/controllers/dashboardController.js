@@ -12,11 +12,21 @@ const getSummary = async (req, res) => {
     {$group: {_id: null, totalSalary: {$sum: "$salary"}}}  
     ])
 
+    // Get the first and last day of the current month
+    const now = new Date();
+    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
+
     const leaveStatus = await Leave.aggregate([
+      {
+        $match: {
+          appliedAt: { $gte: firstDay, $lte: lastDay }
+        }
+      },
       {
         $group: {
           _id: "$status",
-          count: {$sum: 1},
+          count: { $sum: 1 },
         }
       },
     ]);

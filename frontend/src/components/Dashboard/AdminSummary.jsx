@@ -150,7 +150,7 @@ const AdminSummary = () => {
                 <h3 className="text-2xl font-bold text-gray-900">{summary.data.leaveSummary.appliedFor}</h3>
               </div>
               <div className="bg-blue-50 px-2 py-0.5 rounded text-xs font-medium text-blue-700">
-                All Time
+                This Month
               </div>
             </div>
           </div>
