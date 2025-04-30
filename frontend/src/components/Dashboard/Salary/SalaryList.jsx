@@ -203,18 +203,18 @@ const SalaryList = () => {
             ) : (
               salaries.map((salary) => (
                 <tr key={salary._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">{salary.employeeId.userId.name}</td>
-                  <td className="px-6 py-4">{salary.department.dep_name}</td>
+                  <td className="px-6 py-4">{salary.employeeId?.userId?.name || "Unknown"}</td>
+                  <td className="px-6 py-4">{salary.department?.dep_name || "Unknown"}</td>
                   <td className="px-6 py-4">{salary.month}</td>
                   <td className="px-6 py-4">{salary.year}</td>
                   <td className="px-6 py-4">Nrs. {salary.baseSalary}</td>
                   <td className="px-6 py-4">
                     <div className="space-y-2">
-                      <div>Leave: Nrs. {salary.deductions.leave.toFixed(2)}</div>
-                      <div>Tax: Nrs. {salary.deductions.tax.toFixed(2)}</div>
+                      <div>Leave: Nrs. {salary.deductions?.leave?.toFixed(2) || "0.00"}</div>
+                      <div>Tax: Nrs. {salary.deductions?.tax?.toFixed(2) || "0.00"}</div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">Nrs. {salary.netSalary.toFixed(2)}</td>
+                  <td className="px-6 py-4">Nrs. {salary.netSalary?.toFixed(2) || "0.00"}</td>
                 </tr>
               ))
             )}

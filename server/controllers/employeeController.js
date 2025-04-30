@@ -3,8 +3,10 @@ import Employee from "../models/Employee.js";
 import User from "../models/user.js";
 import Leave from "../models/Leave.js";
 import Wfh from "../models/Wfh.js";
+import Attendance from "../models/Attendance.js";
 import bcrypt from "bcrypt";
 import path from "path";
+import Salary from "../models/Salary.js";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -174,6 +176,12 @@ const deleteEmployee = async (req, res) => {
 
     // Delete all associated WFH requests
     await Wfh.deleteMany({ employeeId: id });
+
+    // Delete all associated salaries
+    await Salary.deleteMany({ employeeId: id });
+
+    // Delete all associated attendance records
+    await Attendance.deleteMany({ employeeId: id });
 
     // Delete the associated user
     await User.findByIdAndDelete(employee.userId);

@@ -39,18 +39,18 @@ const AdminSidebar = () => {
       </div>
 
       <div className="p-3 space-y-1 h-[calc(100vh-4rem)] overflow-y-auto">
-        {!isAccountant && (
+       
           <NavLink 
-            to="/admin-dashboard" 
-            className={({isActive}) => `flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${
-              isActive ? "bg-teal-50 text-teal-600" : "text-gray-600 hover:bg-gray-100"
-            }`}
-            end
-          >
-            <Gauge className="w-5 h-5" />
-            <span>Dashboard</span>
-          </NavLink>
-        )}
+          to="/admin-dashboard" 
+          className={({isActive}) => `flex items-center gap-2 py-2 px-3 rounded-lg transition-all duration-200 ${
+            isActive ? "bg-teal-50 text-teal-600" : "text-gray-600 hover:bg-gray-100"
+          }`}
+          end
+        >
+          <Gauge className="w-5 h-5" />
+          <span>Dashboard</span>
+        </NavLink>
+        
         
         {!isAccountant && (
           <>

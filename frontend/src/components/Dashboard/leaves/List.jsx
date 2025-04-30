@@ -2,12 +2,15 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../../context/authContext";
-import { CalendarDays, Plus, Loader2 } from "lucide-react";
+import { CalendarDays, Plus, Loader2, ChevronDown } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { months, filterByMonth } from "../../../utils/DateHelper";
 
 const List = () => {
   const [leaves, setLeaves] = useState([]);
+  const [filteredLeaves, setFilteredLeaves] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [monthFilter, setMonthFilter] = useState("");
   let sno = 1;
   const { id } = useParams();
   const { user } = useAuth();
@@ -45,9 +48,11 @@ const List = () => {
 
       if (response.data.success) {
         setLeaves(response.data.leaves || []);
+        setFilteredLeaves(response.data.leaves || []);
       } else {
         toast.error(response.data.error || "Failed to fetch leaves");
         setLeaves([]);
+        setFilteredLeaves([]);
       }
     } catch (error) {
       console.error("Error fetching leaves:", error);
@@ -59,6 +64,7 @@ const List = () => {
         toast.error("Failed to fetch leave records");
       }
       setLeaves([]);
+      setFilteredLeaves([]);
     } finally {
       setIsLoading(false);
     }
@@ -67,6 +73,12 @@ const List = () => {
   useEffect(() => {
     fetchLeaves();
   }, [id, user]);
+
+  useEffect(() => {
+    let filtered = leaves;
+    filtered = filterByMonth(filtered, monthFilter);
+    setFilteredLeaves(filtered);
+  }, [monthFilter, leaves]);
 
   if (isLoading) {
     return (
@@ -83,15 +95,31 @@ const List = () => {
           <h2 className="text-2xl font-bold text-gray-800">Leave History</h2>
           <CalendarDays className="w-6 h-6 text-gray-400" />
         </div>
-        {isEmployeeView && (
-          <Link
-            to="/employee-dashboard/add-leave"
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            New Leave Request
-          </Link>
-        )}
+        <div className="flex items-center gap-4">
+          <div className="relative">
+            <select
+              value={monthFilter}
+              onChange={(e) => setMonthFilter(e.target.value)}
+              className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2 pr-8 focus:ring-2 focus:ring-teal-500 focus:border-transparent outline-none cursor-pointer"
+            >
+              {months.map((month) => (
+                <option key={month.label} value={month.value}>
+                  {month.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+          </div>
+          {isEmployeeView && (
+            <Link
+              to="/employee-dashboard/add-leave"
+              className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-lg hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              New Leave Request
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="overflow-x-auto">
@@ -107,7 +135,7 @@ const List = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {leaves.map((leave) => (
+            {filteredLeaves.map((leave) => (
               <tr key={leave._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 text-sm text-gray-600">{sno++}</td>
                 <td className="px-6 py-4 text-sm text-gray-900 font-medium">{leave.leaveType}</td>
@@ -131,7 +159,7 @@ const List = () => {
                 </td>
               </tr>
             ))}
-            {leaves.length === 0 && (
+            {filteredLeaves.length === 0 && (
               <tr>
                 <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                   No leave records found
