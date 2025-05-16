@@ -4,8 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --env-file=.env index.js"
+    "start": "nodemon index.js",
+    "dev": "nodemon index.js",
+    "build": "echo 'No build step required for node.js app'"
   },
   "keywords": [],
   "author": "",
