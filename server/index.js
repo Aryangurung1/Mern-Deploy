@@ -16,7 +16,18 @@ import salaryRouter from './routes/salary.js';
 
 connectToDatabase()
 const app = express()
-app.use(cors())
+
+// CORS Configuration
+const corsOptions = {
+  origin: [
+    'https://empora-one.vercel.app'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions))
 app.use(express.json())
 app.use(express.static('public/uploads'))
 app.use('/api/auth', authRouter)
@@ -30,8 +41,10 @@ app.use('/api/attendance', attendanceRouter)
 app.use("/api/notice", noticeRouter);
 app.use('/api/salary', salaryRouter);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port 3000`)
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`)
 })
 
 // Schedule attendance marking at 12:00 midnight daily
