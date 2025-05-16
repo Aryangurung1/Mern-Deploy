@@ -2,9 +2,13 @@ import mongoose from 'mongoose'
 
 const connectToDatabase = async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017/Empora')
+        const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/Empora';
+        console.log('Connecting to MongoDB...');
+        await mongoose.connect(MONGODB_URI);
+        console.log('Connected to MongoDB successfully');
     } catch(error){
-        console.log(error)
+        console.error('MongoDB connection error:', error);
+        throw error; // Rethrow to handle it in the main application
     }
 }
 
