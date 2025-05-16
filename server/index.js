@@ -9,7 +9,7 @@ import settingRouter from './routes/setting.js'
 import dashboardRouter from './routes/dashboard.js'
 import connectToDatabase from './db/db.js'
 import cron from "node-cron";
-import { markDailyAttendance } from "./controllers/attendancecontroller.js";
+import { markDailyAttendance } from "./controllers/attendanceController.js";
 import attendanceRouter from './routes/attendanceRoutes.js'
 import noticeRouter from "./routes/notice.js";
 import salaryRouter from './routes/salary.js';
