@@ -20,7 +20,7 @@ const app = express()
 // CORS Configuration
 const corsOptions = {
   origin: [
-    'https://empora-one.vercel.app'
+    'http://18.208.4.194:5173'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -41,12 +41,13 @@ app.use('/api/attendance', attendanceRouter)
 app.use("/api/notice", noticeRouter);
 app.use('/api/salary', salaryRouter);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port 3000`)
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`✅ Server is running on port ${PORT}`);
 })
 
 // Schedule attendance marking at 12:00 midnight daily
 cron.schedule("0 0 * * *", () => {
-    console.log("Running daily attendance marking at 12:00 AM");
-    markDailyAttendance();
+  console.log("Running daily attendance marking at 12:00 AM");
+  markDailyAttendance();
 });
